@@ -138,7 +138,7 @@ button{cursor:pointer}
 .lv-block.locked{background:var(--bg-s);opacity:.5}
 .lv-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px}
 .lv-title{font-size:13px;font-weight:500}
-.lv-block.locked .lv-title{color:var(--tx-s)}
+.lv-block.locked .lv-title{color:var(--tx-p)}
 .lv-pill{font-size:11px;padding:2px 8px;border-radius:99px}
 .lp-done{background:var(--accent-mid);color:var(--accent-deep)}
 .lp-cur{background:var(--accent);color:var(--accent-light)}
@@ -306,8 +306,8 @@ button{cursor:pointer}
         <div style="font-size:12px;color:#854F0B;margin-bottom:10px" id="sq-sub"></div>
         <div style="display:flex;gap:6px">
           <button class="btn-sm" onclick="addSurpriseQuest()" style="border-color:#FAC775;color:#633806"><i class="ti ti-check"></i> Add it</button>
-          <button class="btn-sm" onclick="surpriseQuest()"><i class="ti ti-refresh"></i> Another</button>
-          <button class="btn-sm" onclick="g('sq-preview').classList.remove('show')">Dismiss</button>
+          <button class="btn-sm" onclick="surpriseQuest()" style="border-color:#FAC775;color:#633806"><i class="ti ti-refresh"></i> Another</button>
+          <button class="btn-sm" onclick="g('sq-preview').classList.remove('show')" style="border-color:#FAC775;color:#633806">Dismiss</button>
         </div>
       </div>
     </div>
