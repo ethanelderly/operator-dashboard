@@ -75,11 +75,10 @@ button{cursor:pointer}
 .hname{flex:1;font-size:13px;line-height:1.35}
 .hname.done{text-decoration:line-through;color:var(--tx-s)}
 .tag {
-  display: inline-flex;
-  flex: 0 0 auto;
+  all: unset;
+  display: inline-block;
   white-space: nowrap;
-  overflow: visible;
-  text-overflow: clip;
+  font: inherit;
 }
 .tp{background:#E1F5EE;color:#085041}.ti{background:#E6F1FB;color:#0C447C}.td{background:var(--accent-light);color:var(--accent-dark)}
 .xpb{font-size:11px;color:var(--tx-s);white-space:nowrap;min-width:36px;text-align:right}
