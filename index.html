@@ -47,7 +47,7 @@ button{cursor:pointer}
 .ttl{font-size:15px;font-weight:500}
 .sub{font-size:12px;color:var(--tx-s)}
 .nav{display:flex;gap:4px;margin-bottom:14px;background:var(--bg-s);border-radius:var(--r-lg);padding:4px}
-.nav-btn{flex:1;padding:7px 2px;border:none;border-radius:var(--r-md);background:none;font-size:11px;cursor:pointer;color:var(--tx-s);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px}
+.nav-btn{flex:1;padding:11px 2px;border:none;border-radius:var(--r-md);background:none;font-size:12px;cursor:pointer;color:var(--tx-s);transition:all .15s;display:flex;align-items:center;justify-content:center;gap:4px;min-height:44px}
 .nav-btn.active{background:var(--bg-p);color:var(--tx-p);font-weight:500;border:0.5px solid var(--bd-t)}
 .view{display:none}.view.active{display:block}
 .gstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
@@ -76,7 +76,7 @@ button{cursor:pointer}
 .hname.done{text-decoration:line-through;color:var(--tx-s)}
 .icon {font-family: "tabler-icons";speak: none;font-style: normal;font-weight: normal;line-height: 1;}
 .tag {display: inline-block;white-space: nowrap;font: inherit;}
-.tp{background:#E1F5EE;color:#085041}.ti{background:#E6F1FB;color:#0C447C}.td{background:var(--accent-light);color:var(--accent-dark)}
+.tp{background:#E1F5EE;color:#085041}.tic{background:#E6F1FB;color:#0C447C}.td{background:var(--accent-light);color:var(--accent-dark)}
 .xpb{font-size:11px;color:var(--tx-s);white-space:nowrap;min-width:36px;text-align:right}
 .pen-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--bd-t)}
 .pen-row:last-child{border-bottom:none}
@@ -474,12 +474,12 @@ const HOLD_MS=2000,CIRC=69,OVERFLOW_RATE=10;
 const DEFAULT_PW='operator';
 
 const THEMES=[
+  {name:'Slate',hex:'#6B7280',light:'#F3F4F6',mid:'#9CA3AF',dark:'#374151',deep:'#1F2937'},
+  {name:'Stone',hex:'#78716C',light:'#F5F5F4',mid:'#A8A29E',dark:'#44403C',deep:'#292524'},
+  {name:'Zinc',hex:'#71717A',light:'#F4F4F5',mid:'#A1A1AA',dark:'#3F3F46',deep:'#27272A'},
   {name:'Violet',hex:'#7F77DD',light:'#EEEDFE',mid:'#AFA9EC',dark:'#3C3489',deep:'#26215C'},
   {name:'Teal',hex:'#1D9E75',light:'#E1F5EE',mid:'#5DCAA5',dark:'#085041',deep:'#04342C'},
   {name:'Blue',hex:'#378ADD',light:'#E6F1FB',mid:'#85B7EB',dark:'#0C447C',deep:'#042C53'},
-  {name:'Coral',hex:'#D85A30',light:'#FAECE7',mid:'#F0997B',dark:'#712B13',deep:'#4A1B0C'},
-  {name:'Amber',hex:'#BA7517',light:'#FAEEDA',mid:'#EF9F27',dark:'#633806',deep:'#412402'},
-  {name:'Pink',hex:'#D4537E',light:'#FBEAF0',mid:'#ED93B1',dark:'#72243E',deep:'#4B1528'},
 ];
 
 const LEVELS=[
@@ -638,8 +638,8 @@ const TIER_NAMES={1:'Tier 1 — daily treats',2:'Tier 2 — weekly treats',3:'Ti
 const TIER_IC={1:'ri-1',2:'ri-2',3:'ri-3'};
 const TIER_CP={1:'cp-1',2:'cp-2',3:'cp-3'};
 const TIER_ICON={1:'ti-coffee',2:'ti-beer',3:'ti-plane'};
-const STAT_TAGS={p:'<span class="tag tp">Physique</span>',i:'<span class="tag ti">Income</span>',d:'<span class="tag td">Discipline</span>'};
-
+const STAT_TAGS={p:'<span class="tag tp">Physique</span>',i:'<span class="tag tic">Income</span>',d:'<span class="tag td">Discipline</span>'};
+  
 /* ==================== STATE ==================== */
 let core,opt,pen,comp,optComp,penComp,quests,rewards,repLog,manualRep,shownLvUp;
 let optOpen=false,qTab='p',currentView='today';
@@ -761,29 +761,39 @@ function hexToHsl(hex){
   const max=Math.max(r,g,b),min=Math.min(r,g,b);
   let h,s,l=(max+min)/2;
   if(max===min){h=s=0;}else{
-    const d=max-min;s=l>0.5?d/(2-max-min):d/(max+min);
-    switch(max){case r:h=(g-b)/d+(g<b?6:0);break;case g:h=(b-r)/d+2;break;case b:h=(r-g)/d+4;break;}
+    const d=max-min;
+    s=l>0.5?d/(2-max-min):d/(max+min);
+    switch(max){
+      case r:h=(g-b)/d+(g<b?6:0);break;
+      case g:h=(b-r)/d+2;break;
+      case b:h=(r-g)/d+4;break;
+    }
     h/=6;
   }
-  return[Math.round(h*360),Math.round(s*100),Math.round(l*100)];
+  return[h*360,s*100,l*100];
 }
 
 function hslToHex(h,s,l){
   s/=100;l/=100;
   const a=s*Math.min(l,1-l);
-  const f=n=>{const k=(n+h/30)%12;const c=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*c).toString(16).padStart(2,'0');};
-  return '#'+f(0)+f(8)+f(4);
+  const f=n=>{
+    const k=(n+h/30)%12;
+    const c=l-a*Math.max(Math.min(k-3,9-k,1),-1);
+    return Math.round(255*c).toString(16).padStart(2,'0');
+  };
+  return'#'+f(0)+f(8)+f(4);
 }
 
 function applyCustomColor(){
   const hex=g('custom-color').value;
-  const [h,s,l]=hexToHsl(hex);
-  const light=hslToHex(h,Math.min(s,40),Math.min(95,l+40));
-  const mid=hslToHex(h,s,Math.min(80,l+20));
-  const dark=hslToHex(h,s,Math.max(20,l-20));
-  const deep=hslToHex(h,s,Math.max(10,l-35));
+  const[h,s,l]=hexToHsl(hex);
+  const light=hslToHex(h,Math.max(10,s*0.3),Math.min(97,90+(l-50)*0.1));
+  const mid=hslToHex(h,Math.max(15,s*0.6),Math.min(80,l+15));
+  const dark=hslToHex(h,Math.min(100,s*1.1),Math.max(18,l-25));
+  const deep=hslToHex(h,Math.min(100,s*1.2),Math.max(8,l-42));
   applyTheme({hex,light,mid,dark,deep});
 }
+  
 function buildThemeBar(){
   const bar=g('theme-bar');if(!bar)return;
   THEMES.forEach(t=>{
