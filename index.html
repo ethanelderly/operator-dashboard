@@ -75,7 +75,7 @@ button{cursor:pointer}
 .hname{flex:1;font-size:13px;line-height:1.35}
 .hname.done{text-decoration:line-through;color:var(--tx-s)}
 .icon {font-family: "tabler-icons";speak: none;font-style: normal;font-weight: normal;line-height: 1;}
-.tag {display: inline-block;white-space: nowrap;font: inherit;}
+.tag{font-size:11px;padding:2px 6px;border-radius:99px;white-space:nowrap;font-weight:500}
 .tp{background:#E1F5EE;color:#085041}.tic{background:#E6F1FB;color:#0C447C}.td{background:var(--accent-light);color:var(--accent-dark)}
 .xpb{font-size:11px;color:var(--tx-s);white-space:nowrap;min-width:36px;text-align:right}
 .pen-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--bd-t)}
@@ -498,30 +498,130 @@ const LEVELS=[
    stepIdx = position in that chain. This makes advancement unambiguous. */
 const QUEST_CHAINS={
   p:[
-    /* 0 */ [{name:'Hit 80kg bench press',sub:'Starting strength baseline'},{name:'Hit 100kg bench press',sub:'Three plates — milestone'},{name:'Hit 110kg bench press',sub:'+10kg on the chain'},{name:'Hit 120kg bench press',sub:'Elite territory'},{name:'Hit 130kg bench press',sub:'Top 5% of lifters worldwide'}],
-    /* 1 */ [{name:'Cut to target body fat',sub:'Sustained lean phase 8–12 weeks'},{name:'Maintain target body fat for 3 months',sub:'Lifestyle, not a diet'},{name:'Full body recomp complete',sub:'Lean and strong simultaneously'}],
-    /* 2 */ [{name:'Run 5k without stopping',sub:'Cardiovascular baseline'},{name:'Run 5k under 25 minutes',sub:'Pace milestone'},{name:'Run 5k under 22 minutes',sub:'Solid recreational pace'},{name:'Complete a 10k',sub:'Doubling the distance'},{name:'Complete a half marathon',sub:'21.1km — serious endurance'}],
-    /* 3 */ [{name:'Hit 30-day gym consistency streak',sub:'No missed planned sessions'},{name:'Hit 90-day gym consistency streak',sub:'Three months unbroken'},{name:'Hit 180-day gym consistency streak',sub:'Six months — a new identity'}],
-    /* 4 */ [{name:'Hit 80kg squat',sub:'Lower body strength baseline'},{name:'Hit 100kg squat',sub:'Three plates on the squat'},{name:'Hit 120kg squat',sub:'Advanced compound strength'},{name:'Hit 140kg squat',sub:'Elite territory'}],
-    /* 5 */ [{name:'Hit 100kg deadlift',sub:'Hinge pattern milestone'},{name:'Hit 140kg deadlift',sub:'Approaching 2x bodyweight'},{name:'Hit 180kg deadlift',sub:'Elite strength territory'}],
-    /* 6 */ [{name:'Complete a 30-day mobility challenge',sub:'Daily 10 min, no skips'},{name:'Touch toes with straight legs',sub:'Posterior chain baseline'},{name:'Full pancake stretch achieved',sub:'Advanced hip and groin flexibility'}],
+    /* 0 — Bench press chain */
+    [
+      {name:'Hit 80kg bench press',sub:'Starting strength baseline',milestones:['Consistently hitting 60kg for sets of 5','Progressing weekly with linear overload','First attempt at 80kg','80kg completed with good form']},
+      {name:'Hit 100kg bench press',sub:'Three plates — milestone',milestones:['80kg feeling solid for reps','Accessory work dialled in','First attempt at 100kg','100kg locked in']},
+      {name:'Hit 110kg bench press',sub:'+10kg on the chain',milestones:['100kg for multiple reps','Technique refined','110kg attempted','110kg completed']},
+      {name:'Hit 120kg bench press',sub:'Elite territory',milestones:['110kg consistent','Programme adjusted for heavy singles','120kg attempted','120kg done']},
+      {name:'Hit 130kg bench press',sub:'Top 5% of lifters worldwide',milestones:['120kg solid','Peaking block complete','130kg attempted','130kg completed']},
+    ],
+    /* 1 — Body composition */
+    [
+      {name:'Cut to target body fat',sub:'Sustained lean phase 8–12 weeks',milestones:['Baseline photos and measurements taken','Deficit and protein targets set','Halfway through the cut','Target body fat reached']},
+      {name:'Maintain target body fat for 3 months',sub:'Lifestyle not a diet',milestones:['Month 1 complete at target','Month 2 complete at target','Month 3 complete at target','Maintenance proven']},
+      {name:'Full body recomp complete',sub:'Lean and strong simultaneously',milestones:['Strength maintained during cut','Visible muscle definition achieved','Performance metrics up','Recomp acknowledged as complete']},
+    ],
+    /* 2 — Running chain */
+    [
+      {name:'Run 5k without stopping',sub:'Cardiovascular baseline',milestones:['Running 2k without stopping','Running 3.5k without stopping','First 5k attempt','5k completed non-stop']},
+      {name:'Run 5k under 25 minutes',sub:'Pace milestone',milestones:['Average pace under 6 min/km','Consistent 5k training','Sub-26 minute 5k achieved','Sub-25 minute 5k done']},
+      {name:'Run 5k under 22 minutes',sub:'Solid recreational pace',milestones:['Interval training added','Sub-24 minute 5k achieved','Sub-23 minute attempt','Sub-22 minutes completed']},
+      {name:'Complete a 10k',sub:'Doubling the distance',milestones:['Longest run at 7k','First 8k completed','First 9k completed','10k finished']},
+      {name:'Complete a half marathon',sub:'21.1km — serious endurance',milestones:['Longest run at 14k','18k long run completed','Race registered and prepared','Half marathon finished']},
+    ],
+    /* 3 — Gym streak */
+    [
+      {name:'Hit 30-day gym consistency streak',sub:'No missed planned sessions',milestones:['7 days without missing','14 days without missing','21 days without missing','30 days done']},
+      {name:'Hit 90-day gym consistency streak',sub:'Three months unbroken',milestones:['30-day streak achieved','60 days without missing','75 days without missing','90 days done']},
+      {name:'Hit 180-day gym consistency streak',sub:'Six months — a new identity',milestones:['90-day streak achieved','120 days without missing','150 days without missing','180 days done']},
+    ],
+    /* 4 — Squat chain */
+    [
+      {name:'Hit 80kg squat',sub:'Lower body strength baseline',milestones:['Form assessed and cued','60kg for solid sets of 5','First attempt at 80kg','80kg completed cleanly']},
+      {name:'Hit 100kg squat',sub:'Three plates on the squat',milestones:['80kg feeling strong','Technique dialled in','100kg attempted','100kg done']},
+      {name:'Hit 120kg squat',sub:'Advanced compound strength',milestones:['100kg consistent','Programme progressed','120kg attempted','120kg completed']},
+      {name:'Hit 140kg squat',sub:'Elite territory',milestones:['120kg solid','Peaking phase completed','140kg attempted','140kg done']},
+    ],
+    /* 5 — Deadlift chain */
+    [
+      {name:'Hit 100kg deadlift',sub:'Hinge pattern milestone',milestones:['Form checked and solid','80kg for clean reps','100kg attempted','100kg completed']},
+      {name:'Hit 140kg deadlift',sub:'Approaching 2x bodyweight',milestones:['100kg consistent','Progressive overload running','140kg attempted','140kg done']},
+      {name:'Hit 180kg deadlift',sub:'Elite strength territory',milestones:['140kg solid','Peaking block complete','180kg attempted','180kg completed']},
+    ],
+    /* 6 — Mobility */
+    [
+      {name:'Complete a 30-day mobility challenge',sub:'Daily 10 min, no skips',milestones:['Days 1–7 complete','Days 8–14 complete','Days 15–21 complete','All 30 days done']},
+      {name:'Touch toes with straight legs',sub:'Posterior chain baseline',milestones:['Hands below knees','Hands at mid-shin','Fingertips touching floor','Palms flat on floor']},
+      {name:'Full pancake stretch achieved',sub:'Advanced hip and groin flexibility',milestones:['90 degree hip opening','120 degree hip opening','150 degree hip opening','Full pancake achieved']},
+    ],
   ],
   i:[
-    /* 0 */ [{name:'Complete SDR skills course',sub:'Full curriculum, no passive consumption'},{name:'Send 50 cold outreach messages',sub:'Quality personalised outreach'},{name:'Land first tech sales interview',sub:'Door is open'},{name:'Land first tech sales role',sub:'Offer accepted and signed'},{name:'Hit first month quota',sub:'Proving yourself in the seat'},{name:'Hit quota 3 months running',sub:'Consistent performer'},{name:'Promoted to AE or senior SDR',sub:'Moving up the ladder'}],
-    /* 1 */ [{name:'Generate first £500 outside employment',sub:'Any monetised skill'},{name:'Generate £1,000 in a single month',sub:'Side income is real'},{name:'Side income matches one month\'s rent',sub:'Financial optionality begins'},{name:'Side income matches full salary',sub:'The crossover point'}],
-    /* 2 */ [{name:'Build a public online presence',sub:'Profile and 10 posts in your niche'},{name:'Reach 500 followers in your niche',sub:'Audience is forming'},{name:'Reach 1,000 followers',sub:'Inflection point'},{name:'Monetise your audience',sub:'First paid product or service'}],
-    /* 3 */ [{name:'Read 5 sales or business books',sub:'Foundational knowledge base'},{name:'Implement one insight from each book',sub:'Reading is not enough'},{name:'Write your own sales playbook',sub:'Synthesised personal system'}],
-    /* 4 */ [{name:'Reach 500 LinkedIn connections',sub:'Network foundation'},{name:'Get one public testimonial or recommendation',sub:'Social proof exists'},{name:'Get 5 public testimonials',sub:'Track record is visible'}],
-    /* 5 */ [{name:'Complete a coding or data fundamentals course',sub:'Technical edge in sales'},{name:'Build a simple tool or dashboard for work',sub:'You solve problems with code'}],
+    /* 0 — Sales career chain */
+    [
+      {name:'Complete SDR skills course',sub:'Full curriculum, not passive',milestones:['Course started and scheduled','Halfway through modules','Final module completed','Notes reviewed and actioned']},
+      {name:'Send 50 cold outreach messages',sub:'Quality personalised outreach',milestones:['First 10 sent','25 sent with replies tracked','40 sent','50 done — responses analysed']},
+      {name:'Land first tech sales interview',sub:'Door is open',milestones:['CV and LinkedIn optimised','Applications submitted','First screening call booked','Interview confirmed']},
+      {name:'Land first tech sales role',sub:'Offer accepted and signed',milestones:['First round interview passed','Final round interview done','Offer received','Offer signed — start date set']},
+      {name:'Hit first month quota',sub:'Proving yourself in the seat',milestones:['Pipeline built in first 2 weeks','First deal closed','On track at mid-month','Quota hit']},
+      {name:'Hit quota 3 months running',sub:'Consistent performer',milestones:['Month 1 quota hit','Month 2 quota hit','Month 3 quota hit','Recognised as consistent performer']},
+      {name:'Promoted to AE or senior SDR',sub:'Moving up the ladder',milestones:['Promotion conversation initiated','Business case made','Promotion confirmed','New role started']},
+    ],
+    /* 1 — Side income chain */
+    [
+      {name:'Generate first £500 outside employment',sub:'Any monetised skill',milestones:['Income method identified','First client or sale attempt','First payment received','£500 total reached']},
+      {name:'Generate £1,000 in a single month',sub:'Side income is real',milestones:['£250 in a month achieved','£500 in a month achieved','£750 in a month achieved','£1,000 in a single month']},
+      {name:'Side income matches one month\'s rent',sub:'Financial optionality begins',milestones:['Consistent monthly income established','Income growing month on month','75% of rent covered','Full rent matched']},
+      {name:'Side income matches full salary',sub:'The crossover point',milestones:['50% of salary matched','75% of salary matched','Month where it exceeded salary','Crossover sustained for 3 months']},
+    ],
+    /* 2 — Audience chain */
+    [
+      {name:'Build a public online presence',sub:'Profile and 10 posts in your niche',milestones:['Profile optimised and positioned','First 3 posts published','Posts 4–7 done','10 posts published and reviewed']},
+      {name:'Reach 500 followers in your niche',sub:'Audience is forming',milestones:['100 followers reached','250 followers reached','400 followers reached','500 followers achieved']},
+      {name:'Reach 1,000 followers',sub:'Inflection point',milestones:['600 followers','750 followers','900 followers','1,000 followers hit']},
+      {name:'Monetise your audience',sub:'First paid product or service',milestones:['Offer defined and priced','Announced to audience','First enquiry or sale','First payment received']},
+    ],
+    /* 3 — Knowledge chain */
+    [
+      {name:'Read 5 sales or business books',sub:'Foundational knowledge base',milestones:['Book 1 finished','Book 2 finished','Books 3 and 4 finished','Book 5 finished']},
+      {name:'Implement one insight from each book',sub:'Reading is not enough',milestones:['Insight from book 1 applied','Insights from books 2 and 3 applied','Insights from books 4 and 5 applied','All 5 insights in active use']},
+      {name:'Write your own sales playbook',sub:'Synthesised personal system',milestones:['Outline and structure drafted','Prospecting section written','Objection handling section written','Full playbook complete']},
+    ],
+    /* 4 — Network chain */
+    [
+      {name:'Reach 500 LinkedIn connections',sub:'Network foundation',milestones:['100 targeted connections sent','250 connections reached','400 connections reached','500 reached']},
+      {name:'Get one public testimonial',sub:'Social proof exists',milestones:['Identified who to ask','Request sent','Follow-up done','Testimonial published']},
+      {name:'Get 5 public testimonials',sub:'Track record is visible',milestones:['2 testimonials collected','3 testimonials collected','4 testimonials collected','5 published']},
+    ],
+    /* 5 — Technical edge */
+    [
+      {name:'Complete a coding or data fundamentals course',sub:'Technical edge in sales',milestones:['Course chosen and started','25% complete','75% complete','Course finished']},
+      {name:'Build a simple tool or dashboard for work',sub:'You solve problems with code',milestones:['Problem identified and scoped','First working version built','Shared with team or manager','In active use']},
+    ],
   ],
   d:[
-    /* 0 */ [{name:'Complete a full week perfectly',sub:'All core habits 7 days straight'},{name:'14-day perfect streak',sub:'Two full weeks'},{name:'30-day perfect streak',sub:'A month without breaking'},{name:'Reach Level 5 on the tracker',sub:'20-day streak milestone'},{name:'Reach Level 8 — Sovereign',sub:'42-day perfect streak'}],
-    /* 1 */ [{name:'30-day phone-free morning streak',sub:'60 min no phone every morning'},{name:'60-day phone-free morning streak',sub:'Two months owning the morning'}],
-    /* 2 */ [{name:'Zero avoidance days for 2 weeks',sub:'Nothing rolled over for 14 days'},{name:'Zero avoidance days for a full month',sub:'30 days of clean execution'}],
-    /* 3 */ [{name:'Complete the daily sequence 7 days running',sub:'Work → Gym → Protein → Skill → Controlled leisure'},{name:'Complete the daily sequence for 30 days',sub:'The sequence becomes automatic'}],
-    /* 4 */ [{name:'Average under 90 min screen time for a week',sub:'Phone below limit every day for 7 days'},{name:'Average under 60 min screen time for a week',sub:'New baseline is set'},{name:'Maintain under 60 min average for a month',sub:'Permanent behaviour change'}],
+    /* 0 — Streak chain */
+    [
+      {name:'Complete a full week perfectly',sub:'All core habits 7 days straight',milestones:['Day 3 complete','Day 5 complete','Day 6 complete','Day 7 — full week done']},
+      {name:'14-day perfect streak',sub:'Two full weeks',milestones:['7-day streak achieved','Day 10 complete','Day 13 complete','14 days done']},
+      {name:'30-day perfect streak',sub:'A month without breaking',milestones:['14-day streak achieved','Day 20 complete','Day 25 complete','30 days done']},
+      {name:'Reach Level 5 on the tracker',sub:'20-day streak milestone',milestones:['Level 2 reached','Level 3 reached','Level 4 reached','Level 5 unlocked']},
+      {name:'Reach Level 8 — Sovereign',sub:'42-day perfect streak',milestones:['Level 5 reached','Level 6 reached','Level 7 reached','Level 8 — Sovereign']},
+    ],
+    /* 1 — Phone morning chain */
+    [
+      {name:'30-day phone-free morning streak',sub:'60 min no phone every morning',milestones:['7 days phone-free mornings','14 days complete','21 days complete','30 days done']},
+      {name:'60-day phone-free morning streak',sub:'Two months owning the morning',milestones:['30-day streak achieved','40 days complete','50 days complete','60 days done']},
+    ],
+    /* 2 — Avoidance chain */
+    [
+      {name:'Zero avoidance days for 2 weeks',sub:'Nothing rolled over for 14 days',milestones:['5 days clean','7 days clean','10 days clean','14 days — nothing avoided']},
+      {name:'Zero avoidance days for a full month',sub:'30 days of clean execution',milestones:['14-day streak achieved','20 days clean','25 days clean','30 days — fully clean']},
+    ],
+    /* 3 — Daily sequence chain */
+    [
+      {name:'Complete the daily sequence 7 days running',sub:'Work → Gym → Protein → Skill → Controlled leisure',milestones:['Days 1–2 complete','Days 3–4 complete','Days 5–6 complete','Day 7 — sequence locked']},
+      {name:'Complete the daily sequence for 30 days',sub:'The sequence becomes automatic',milestones:['7-day sequence achieved','Day 14 complete','Day 21 complete','Day 30 — automatic']},
+    ],
+    /* 4 — Screen time chain */
+    [
+      {name:'Average under 90 min screen time for a week',sub:'Phone below limit 7 days straight',milestones:['Day 3 under limit','Day 5 under limit','Day 6 under limit','Full week done']},
+      {name:'Average under 60 min screen time for a week',sub:'New baseline is set',milestones:['3 days under 60 min','5 days under 60 min','6 days under 60 min','Full week under 60 min']},
+      {name:'Maintain under 60 min average for a month',sub:'Permanent behaviour change',milestones:['Week 1 complete','Week 2 complete','Week 3 complete','Full month — new baseline']},
+    ],
   ],
 };
+ 
 
 const SIDE_QUEST_BANK=[
   {name:'Watch a sunset with no phone',sub:'Just be somewhere. No content.',diff:'e'},
@@ -977,24 +1077,107 @@ function getChainNext(q){
   return{...chain[nextStepIdx],chainCat:q.chainCat,chainIdx:q.chainIdx,stepIdx:nextStepIdx};
 }
 
+function getMilestoneProgress(q){
+  /* q.milestones stores which milestone indices are ticked, e.g. [0,1] */
+  const ticked=(q.milestones||[]).length;
+  const total=getQuestMilestoneDefs(q).length;
+  return total?Math.round(ticked/total*100):0;
+}
+ 
+function getQuestMilestoneDefs(q){
+  /* Get the milestone label strings from the chain definition */
+  if(q.chainCat!==undefined&&q.chainIdx!==undefined&&q.stepIdx!==undefined){
+    return QUEST_CHAINS[q.chainCat]?.[q.chainIdx]?.[q.stepIdx]?.milestones||[];
+  }
+  /* Manual quests — use stored milestoneDefs if present */
+  return q.milestoneDefs||[];
+}
+ 
 function qRow(q){
   const diff=q.diff||'h';
-  const earned=q.done?XP_MAP[diff]:Math.round(XP_MAP[diff]*(q.prog/100));
+  const milestoneDefs=getQuestMilestoneDefs(q);
+  const ticked=q.milestones||[];
+  const prog=q.done?100:(milestoneDefs.length?Math.round(ticked.length/milestoneDefs.length*100):q.prog||0);
+  const earned=Math.round(XP_MAP[diff]*(prog/100));
   const next=q.done?getChainNext(q):null;
   const isChained=q.chainCat!==undefined;
   const row=document.createElement('div');row.className='quest-row';
-  const chainBadge=isChained?`<span class="qchain"><i class="ti ti-link" style="font-size:10px"></i>chain ${q.stepIdx!==undefined?q.stepIdx+1:'?'}/${q.chainIdx!==undefined?(QUEST_CHAINS[q.chainCat]?.[q.chainIdx]?.length||'?'):'?'}</span>`:'';
+  const chainBadge=isChained?`<span class="qchain"><i class="ti ti-link" style="font-size:10px"></i>${(q.stepIdx||0)+1}/${QUEST_CHAINS[q.chainCat]?.[q.chainIdx]?.length||'?'}</span>`:'';
   const accent=qTab==='p'?'#1D9E75':qTab==='i'?'#378ADD':qTab==='d'?'var(--accent)':'#EF9F27';
+ 
+  let progressHTML='';
+  if(!q.done){
+    if(milestoneDefs.length){
+      /* Milestone checklist */
+      const items=milestoneDefs.map((label,idx)=>{
+        const done=ticked.includes(idx);
+        return `<div class="ms-row" style="display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:0.5px solid var(--bd-t)">
+          <input type="checkbox" class="ms-chk" data-qid="${q.id}" data-idx="${idx}" ${done?'checked':''} style="width:16px;height:16px;accent-color:${accent};flex-shrink:0">
+          <span style="font-size:12px;${done?'text-decoration:line-through;color:var(--tx-s)':''}">${label}</span>
+        </div>`;
+      }).join('');
+      const barW=prog;
+      progressHTML=`<div style="margin-top:8px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <div class="pmini" style="flex:1"><div class="${PMFILL[qTab]}" style="width:${barW}%;height:100%;border-radius:99px;transition:width .3s"></div></div>
+          <span style="font-size:11px;color:var(--tx-s);white-space:nowrap">${ticked.length}/${milestoneDefs.length} milestones</span>
+        </div>
+        <div style="border-radius:var(--r-md);overflow:hidden">${items}</div>
+      </div>`;
+    } else {
+      /* Fallback slider for manual quests with no milestones */
+      progressHTML=`<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+        <div class="pmini"><div class="${PMFILL[qTab]}" id="qbar-${q.id}" style="width:${q.prog||0}%"></div></div>
+        <input type="range" min="0" max="100" value="${q.prog||0}" id="qsl-${q.id}" step="5" style="width:70px">
+        <span style="font-size:11px;color:var(--tx-s);min-width:28px" id="qpct-${q.id}">${q.prog||0}%</span>
+      </div>`;
+    }
+  }
+ 
   row.innerHTML=`<input type="checkbox" class="qchk" id="qcb-${q.id}" ${q.done?'checked':''} style="accent-color:${accent}">
     <div class="qbody">
       <div class="qname${q.done?' done':''}">${q.name}</div>
       ${q.sub?`<div class="qsub">${q.sub}</div>`:''}
-      <div class="badges"><span class="badge ${BCAT[qTab]}">${CAT_LBL[qTab]}</span><span class="badge ${DIFF_CLS[diff]}">${DIFF_LBL[diff]}</span><span class="badge bxp">${earned}/${XP_MAP[diff]} XP</span>${chainBadge}${q.done?'<span class="badge bdone"><i class="ti ti-check"></i> Done</span>':''}</div>
-      ${!q.done?`<div style="display:flex;align-items:center;gap:8px;margin-top:5px"><div class="pmini"><div class="${PMFILL[qTab]}" id="qbar-${q.id}" style="width:${q.prog}%"></div></div><input type="range" min="0" max="100" value="${q.prog}" id="qsl-${q.id}" step="5" style="width:70px"><span style="font-size:11px;color:var(--tx-s);min-width:28px" id="qpct-${q.id}">${q.prog}%</span></div>`:''}
-      ${next?`<div class="chain-next"><i class="ti ti-arrow-right" style="font-size:12px;color:var(--accent)"></i><span style="color:var(--accent-dark)">Next: <strong style="font-weight:500">${next.name}</strong></span></div>`:''}
+      <div class="badges" style="margin-bottom:2px"><span class="badge ${BCAT[qTab]}">${CAT_LBL[qTab]}</span><span class="badge ${DIFF_CLS[diff]}">${DIFF_LBL[diff]}</span><span class="badge bxp">${earned}/${XP_MAP[diff]} XP</span>${chainBadge}${q.done?'<span class="badge bdone"><i class="ti ti-check"></i> Done</span>':''}</div>
+      ${progressHTML}
+      ${next?`<div class="chain-next" style="margin-top:8px"><i class="ti ti-arrow-right" style="font-size:12px;color:var(--accent)"></i><span style="color:var(--accent-dark)">Next: <strong style="font-weight:500">${next.name}</strong></span></div>`:''}
     </div>${delBtn('qdel_'+q.id)}`;
-  row.querySelector('input[type=checkbox]').addEventListener('change',e=>toggleQuest(q.id,e.target.checked));
-  const sl=row.querySelector('input[type=range]');if(sl)sl.addEventListener('input',e=>updateQProg(q.id,parseInt(e.target.value)));
+ 
+  /* Quest done toggle */
+  row.querySelector('input.qchk').addEventListener('change',e=>toggleQuest(q.id,e.target.checked));
+ 
+  /* Milestone checkboxes */
+  row.querySelectorAll('.ms-chk').forEach(cb=>{
+    cb.addEventListener('change',e=>{
+      const qid=e.target.dataset.qid;
+      const idx=parseInt(e.target.dataset.idx);
+      const quest=findQ(qid);if(!quest)return;
+      if(!quest.milestones)quest.milestones=[];
+      if(e.target.checked){if(!quest.milestones.includes(idx))quest.milestones.push(idx);}
+      else{quest.milestones=quest.milestones.filter(i=>i!==idx);}
+      /* Auto-complete quest if all milestones ticked */
+      const defs=getQuestMilestoneDefs(quest);
+      if(defs.length&&quest.milestones.length===defs.length&&!quest.done){
+        quest.done=true;
+        repLog.push({note:'Quest done: '+quest.name,amt:REP_MAP[quest.diff||'m'],ts:Date.now()});
+        const nxt=getChainNext(quest);
+        if(nxt){
+          quests[qTab].push({
+            id:qTab+'_'+nxt.chainIdx+'_'+nxt.stepIdx+'_'+Date.now(),
+            name:nxt.name,sub:nxt.sub||'',diff:'h',done:false,prog:0,milestones:[],
+            chainCat:nxt.chainCat,chainIdx:nxt.chainIdx,stepIdx:nxt.stepIdx
+          });
+          setTimeout(()=>showCel('Chain advanced: '+nxt.name+' unlocked.','cel-lv'),600);
+        }
+      }
+      saveQuests();renderAll();
+    });
+  });
+ 
+  /* Slider for manual quests */
+  const sl=row.querySelector('input[type=range]');
+  if(sl)sl.addEventListener('input',e=>updateQProg(q.id,parseInt(e.target.value)));
+ 
   attachHold('qdel_'+q.id,()=>deleteQuest(q.id));
   return row;
 }
@@ -1112,7 +1295,10 @@ function toggleOpt(){optOpen=!optOpen;g('opt-list').style.display=optOpen?'block
 function setQTab(t){qTab=t;renderQuests();}
 
 function toggleQuest(id,checked){
-  const q=findQ(id);if(!q)return;const wasDone=q.done;q.done=checked;if(checked)q.prog=100;
+  const q=findQ(id);if(!q)return;
+  const wasDone=q.done;
+  q.done=checked;
+  /* Don't touch progress or milestones when toggling */
   if(checked&&!wasDone){
     const diff=q.diff||'m';
     repLog.push({note:'Quest done: '+q.name,amt:REP_MAP[diff],ts:Date.now()});
@@ -1120,7 +1306,7 @@ function toggleQuest(id,checked){
     if(next){
       quests[qTab].push({
         id:qTab+'_'+next.chainIdx+'_'+next.stepIdx+'_'+Date.now(),
-        name:next.name,sub:next.sub||'',diff:'h',done:false,prog:0,
+        name:next.name,sub:next.sub||'',diff:'h',done:false,prog:0,milestones:[],
         chainCat:next.chainCat,chainIdx:next.chainIdx,stepIdx:next.stepIdx
       });
       setTimeout(()=>showCel('Chain advanced: '+next.name+' unlocked.','cel-lv'),600);
