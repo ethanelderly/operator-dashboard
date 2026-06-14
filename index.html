@@ -203,6 +203,16 @@ button{cursor:pointer}
 .sync-dot.syncing{background:#EF9F27;animation:blink 1s infinite}
 .sync-dot.err{background:#E24B4A}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ms-generating{
+  font-size:12px;color:var(--tx-s);
+  display:flex;align-items:center;gap:6px;
+  padding:8px 0;
+}
+.ms-generating .spinner{
+  width:14px;height:14px;border:2px solid var(--bd-t);
+  border-top-color:var(--accent);border-radius:50%;
+  animation:spin .7s linear infinite;flex-shrink:0;
+}
 </style>
 </head>
 <body>
@@ -624,34 +634,36 @@ const QUEST_CHAINS={
  
 
 const SIDE_QUEST_BANK=[
-  {name:'Watch a sunset with no phone',sub:'Just be somewhere. No content.',diff:'e'},
+  {name:'Watch a sunset with no phone',sub:'Be somewhere. No content, no captures.',diff:'e'},
   {name:'Fast for 24 hours',sub:'Prove hunger is just a feeling',diff:'m'},
-  {name:'Take a solo weekend trip somewhere new',sub:'Plan it, execute it, go alone',diff:'e'},
-  {name:'Write a letter to yourself to open in one year',sub:'Be honest. Be specific.',diff:'e'},
-  {name:'Go a full weekend without social media',sub:'Friday night to Monday morning',diff:'m'},
-  {name:'Learn to cook 5 high-protein meals from scratch',sub:'No recipe needed after',diff:'e'},
-  {name:'Do something you have been putting off for 6 months',sub:'You know what it is',diff:'m'},
-  {name:'Cold shower every morning for 2 weeks',sub:'Start uncomfortable. End sharp.',diff:'m'},
-  {name:'Go to a live event alone',sub:'Gig, comedy, sport — your call',diff:'e'},
-  {name:'Wake up before 6am for 7 days straight',sub:'Own the morning before the world starts',diff:'m'},
-  {name:'Learn 20 words in a language you have always wanted to speak',sub:'Just enough to feel it',diff:'e'},
-  {name:'Tell someone something honest you have been avoiding saying',sub:'Courage over comfort',diff:'m'},
+  {name:'Take a solo weekend trip somewhere new',sub:'Plan it, book it, execute it alone',diff:'e'},
+  {name:'Write a letter to yourself to open in one year',sub:'Be honest and specific about where you are now',diff:'e'},
+  {name:'Go a full weekend without social media',sub:'Friday night through to Monday morning',diff:'m'},
+  {name:'Learn to cook 5 high-protein meals from scratch',sub:'No recipe needed after — they are in your head',diff:'e'},
+  {name:'Do something you have been putting off for 6 months',sub:'You already know what it is',diff:'m'},
+  {name:'Cold shower every morning for 2 weeks',sub:'Start the day uncomfortable. End it sharp.',diff:'m'},
+  {name:'Go to a live event alone',sub:'Gig, comedy night, sport — your call',diff:'e'},
+  {name:'Wake up before 6am for 7 days straight',sub:'Own the first hours before the world starts',diff:'m'},
+  {name:'Learn 20 words in a new language',sub:'Just enough to feel the start of something',diff:'e'},
+  {name:'Tell someone something honest you have been avoiding',sub:'Courage over comfort',diff:'m'},
   {name:'Spend a Saturday entirely offline',sub:'No phone, no laptop, no streaming',diff:'m'},
-  {name:'Run somewhere you have never been before',sub:'Explore on foot',diff:'e'},
-  {name:'Call someone you have not spoken to in over a year',sub:'Do not text. Call.',diff:'e'},
-  {name:'Buy nothing non-essential for 30 days',sub:'Only food, transport, bills',diff:'m'},
-  {name:'Walk somewhere for an hour with no destination',sub:'No maps. Just go.',diff:'e'},
-  {name:'Learn a skill purely for fun',sub:'Not income related. Pure curiosity.',diff:'e'},
-  {name:'Finish something creative you started and abandoned',sub:'The unfinished thing you keep thinking about',diff:'m'},
-  {name:'Sleep at the same time every night for 2 weeks',sub:'Same window, every day',diff:'m'},
-  {name:'Journal every day for 30 days',sub:'5 minutes minimum, write honestly',diff:'m'},
-  {name:'Volunteer for a day',sub:'Give time, not money',diff:'e'},
-  {name:'Watch a documentary about something you know nothing about',sub:'Pick one topic, go deep',diff:'e'},
-  {name:'Get your blood work done',sub:'Know your numbers',diff:'e'},
-  {name:'Spend a full day with no agenda',sub:'No plans, no productivity pressure',diff:'e'},
-  {name:'Read a biography of someone you admire',sub:'Understand how they actually got there',diff:'e'},
-  {name:'Go one full week without alcohol',sub:'Notice how it feels',diff:'e'},
-  {name:'Plan and cook a full week of meals in advance',sub:'Meal prep as discipline practice',diff:'m'},
+  {name:'Run somewhere you have never been before',sub:'Use running to explore, not just exercise',diff:'e'},
+  {name:'Call someone you have not spoken to in over a year',sub:'Do not text. Pick up the phone.',diff:'e'},
+  {name:'Buy nothing non-essential for 30 days',sub:'Food, transport and bills only',diff:'m'},
+  {name:'Walk for an hour with no destination',sub:'No maps. No plan. Just go.',diff:'e'},
+  {name:'Learn a skill purely for enjoyment',sub:'No income angle. Pure curiosity.',diff:'e'},
+  {name:'Finish something creative you abandoned',sub:'The unfinished thing you keep half-thinking about',diff:'m'},
+  {name:'Sleep at the same time every night for 2 weeks',sub:'Same window, every single day',diff:'m'},
+  {name:'Journal every day for 30 days',sub:'5 minutes minimum. Write something true.',diff:'m'},
+  {name:'Volunteer for a day',sub:'Give your time, not your money',diff:'e'},
+  {name:'Watch a documentary on something you know nothing about',sub:'One unfamiliar topic, full attention',diff:'e'},
+  {name:'Get a full blood panel done',sub:'Know your actual numbers',diff:'e'},
+  {name:'Spend a full day with no agenda',sub:'No productivity, no plans, no obligations',diff:'e'},
+  {name:'Read a biography of someone you respect',sub:'Understand how they actually built what they built',diff:'e'},
+  {name:'Go one full week without alcohol',sub:'Notice what changes when you do',diff:'e'},
+  {name:'Plan and cook a full week of meals in advance',sub:'Meal prep as a discipline practice',diff:'m'},
+  {name:'Have a conversation with a stranger that changes your day',sub:'Be the one who initiates it',diff:'e'},
+  {name:'Do one thing that genuinely scares you',sub:'Not reckless — something that takes nerve',diff:'m'},
 ];
 
 const REWARD_BANK=[
@@ -1107,25 +1119,27 @@ function qRow(q){
  
   let progressHTML='';
   if(!q.done){
-    if(milestoneDefs.length){
-      /* Milestone checklist */
+    if(q.generating){
+      progressHTML=`<div class="ms-generating" style="font-size:12px;color:var(--tx-s);display:flex;align-items:center;gap:6px;padding:8px 0">
+        <div style="width:14px;height:14px;border:2px solid var(--bd-t);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0"></div>
+        Generating milestones…
+      </div>`;
+    } else if(milestoneDefs.length){
       const items=milestoneDefs.map((label,idx)=>{
         const done=ticked.includes(idx);
-        return `<div class="ms-row" style="display:flex;align-items:center;gap:7px;padding:4px 0;border-bottom:0.5px solid var(--bd-t)">
-          <input type="checkbox" class="ms-chk" data-qid="${q.id}" data-idx="${idx}" ${done?'checked':''} style="width:16px;height:16px;accent-color:${accent};flex-shrink:0">
-          <span style="font-size:12px;${done?'text-decoration:line-through;color:var(--tx-s)':''}">${label}</span>
+        return `<div style="display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:0.5px solid var(--bd-t)">
+          <input type="checkbox" class="ms-chk" data-qid="${q.id}" data-idx="${idx}" ${done?'checked':''} style="width:16px;height:16px;accent-color:${accent};flex-shrink:0;cursor:pointer">
+          <span style="font-size:12px;${done?'text-decoration:line-through;color:var(--tx-s)':'color:var(--tx-p)'}">${label}</span>
         </div>`;
       }).join('');
-      const barW=prog;
       progressHTML=`<div style="margin-top:8px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-          <div class="pmini" style="flex:1"><div class="${PMFILL[qTab]}" style="width:${barW}%;height:100%;border-radius:99px;transition:width .3s"></div></div>
-          <span style="font-size:11px;color:var(--tx-s);white-space:nowrap">${ticked.length}/${milestoneDefs.length} milestones</span>
+          <div class="pmini" style="flex:1"><div class="${PMFILL[qTab]}" style="width:${prog}%;height:100%;border-radius:99px;transition:width .3s"></div></div>
+          <span style="font-size:11px;color:var(--tx-s);white-space:nowrap">${ticked.length}/${milestoneDefs.length} done</span>
         </div>
-        <div style="border-radius:var(--r-md);overflow:hidden">${items}</div>
+        ${items}
       </div>`;
     } else {
-      /* Fallback slider for manual quests with no milestones */
       progressHTML=`<div style="display:flex;align-items:center;gap:8px;margin-top:6px">
         <div class="pmini"><div class="${PMFILL[qTab]}" id="qbar-${q.id}" style="width:${q.prog||0}%"></div></div>
         <input type="range" min="0" max="100" value="${q.prog||0}" id="qsl-${q.id}" step="5" style="width:70px">
@@ -1190,11 +1204,24 @@ function surpriseQuest(){
   g('sq-name').textContent=pendingSurpriseQ.name;g('sq-sub').textContent=pendingSurpriseQ.sub;
   g('sq-preview').classList.add('show');
 }
-function addSurpriseQuest(){
+async function addSurpriseQuest(){
   if(!pendingSurpriseQ)return;
-  quests.s.push({id:'qs'+Date.now(),name:pendingSurpriseQ.name,sub:pendingSurpriseQ.sub,diff:pendingSurpriseQ.diff,done:false,prog:0});
-  pendingSurpriseQ=null;g('sq-preview').classList.remove('show');
-  saveQuests();renderAll();showCel('Side quest added.','cel-rep');
+  const id='qs'+Date.now();
+  quests.s.push({
+    id,name:pendingSurpriseQ.name,sub:pendingSurpriseQ.sub,
+    diff:pendingSurpriseQ.diff,done:false,prog:0,milestones:[],generating:true
+  });
+  pendingSurpriseQ=null;
+  g('sq-preview').classList.remove('show');
+  saveQuests();renderAll();showCel('Side quest added — generating milestones…','cel-rep');
+ 
+  const q=quests.s.find(x=>x.id===id);
+  if(q){
+    const ms=await generateMilestones(q.name,'Side quest');
+    q.milestoneDefs=ms;q.milestones=[];q.generating=false;
+    saveQuests();renderAll();
+    showCel('Milestones ready for: '+q.name,'cel-hab');
+  }
 }
 
 /* ==================== LEVELS ==================== */
@@ -1317,11 +1344,63 @@ function toggleQuest(id,checked){
 function updateQProg(id,val){const q=findQ(id);if(!q)return;q.prog=val;saveQuests();const b=g('qbar-'+id);if(b)b.style.width=val+'%';const l=g('qpct-'+id);if(l)l.textContent=val+'%';}
 function deleteQuest(id){['p','i','d','s'].forEach(c=>{quests[c]=quests[c].filter(q=>q.id!==id)});saveQuests();renderAll();}
 function findQ(id){for(const c of['p','i','d','s']){const q=(quests[c]||[]).find(x=>x.id===id);if(q)return q;}return null;}
-function addQuest(){
-  const name=g('qn-name').value.trim();if(!name)return;
-  const cat=g('qn-cat').value;const diff=g('qn-diff').value;
-  quests[cat].push({id:cat+Date.now(),name,sub:'',diff,done:false,prog:0});
-  g('qn-name').value='';saveQuests();qTab=cat;renderAll();
+async function generateMilestones(questName,category){
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:300,
+        system:`You generate exactly 4 short milestone steps for personal development quests.
+Return ONLY a JSON array of 4 strings. No preamble, no markdown, no explanation.
+Each milestone should be a concrete, observable action or checkpoint — not vague.
+Keep each one under 12 words. They should progress logically from start to completion.
+Example format: ["First concrete step","Second checkpoint","Third checkpoint","Final completion step"]`,
+        messages:[{
+          role:'user',
+          content:`Quest: "${questName}"\nCategory: ${category}\n\nGenerate 4 milestone steps for this quest.`
+        }]
+      })
+    });
+    if(!resp.ok)return defaultMilestones(questName);
+    const data=await resp.json();
+    const text=data.content?.find(b=>b.type==='text')?.text||'';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    if(Array.isArray(parsed)&&parsed.length>=2)return parsed.slice(0,4);
+    return defaultMilestones(questName);
+  }catch(e){
+    return defaultMilestones(questName);
+  }
+}
+ 
+function defaultMilestones(questName){
+  /* Fallback if API fails */
+  return[
+    'Research and plan your approach',
+    'Complete the first stage',
+    'Reach the halfway point',
+    'Complete: '+questName
+  ];
+}
+async function addQuest(){
+  const name=g('qn-name').value.trim();
+  if(!name)return;
+  const cat=g('qn-cat').value;
+  const diff=g('qn-diff').value;
+  const id=cat+Date.now();
+ 
+  /* Add quest immediately with empty milestones and a generating flag */
+  quests[cat].push({id,name,sub:'',diff,done:false,prog:0,milestones:[],generating:true});
+  g('qn-name').value='';
+  saveQuests();qTab=cat;renderAll();
+ 
+  /* Generate milestones via Claude API */
+  const ms=await generateMilestones(name,CAT_LBL[cat]);
+  const q=findQ(id);
+  if(q){q.milestones=[];q.milestoneDefs=ms;q.generating=false;}
+  saveQuests();renderAll();
 }
 function saveQuests(){sbSet('quests',quests);scheduleSave();}
 
