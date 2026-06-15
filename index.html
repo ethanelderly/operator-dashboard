@@ -1192,7 +1192,7 @@ async function makeQuestSmart(id){
   const quest=findQ(id);if(!quest)return;
   quest.generating=true;saveQuests();
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('https://weathered-salad-c73f.ethanelderly.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,
         system:'You make personal development quests SMART. Return ONLY valid JSON, no markdown, no backticks.',
@@ -1223,7 +1223,7 @@ async function addQuest(){
 
   /* Ask Claude to classify AND make SMART */
   try{
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('https://weathered-salad-c73f.ethanelderly.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,
         system:'You classify and make personal development quests SMART. Return ONLY valid JSON, no markdown.',
@@ -1265,7 +1265,7 @@ async function generateSideQuestSuggestions(){
   btn.disabled=true;
   try{
     const existing=quests.s.map(q=>q.name);
-    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    const resp=await fetch('https://weathered-salad-c73f.ethanelderly.workers.dev/',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,
         system:'You suggest side quests for a personal development app. Return ONLY a valid JSON array. No markdown, no backticks.',
