@@ -514,7 +514,7 @@ button{cursor:pointer}
   <div class="card">
     <div class="ttl" style="margin-bottom:8px">Data</div>
     <div style="font-size:13px;color:var(--tx-s);margin-bottom:10px">All data syncs to Supabase and is available on any device.</div>
-    <button class="btn-sm" style="color:#A32D2D;border-color:#F09595" onclick="if(confirm('Reset ALL data? Cannot be undone.'))resetAll()">🗑 Reset all data</button>
+    <button class="btn-sm" style="color:#A32D2D;border-color:#F09595" onclick="confirmReset()">🗑 Reset all data</button>
   </div>
 </div>
 
@@ -702,15 +702,21 @@ const PEN_DEF=[
 const STAT_TO_CAT={p:'p',i:'i',d:'d'};
 
 function buildInitialQuests(){
-  const q={p:[],i:[],d:[],s:[]};
-  ['p','i','d'].forEach(cat=>{
-    QUEST_CHAINS[cat].forEach((chain,ci)=>{
-      q[cat].push(makeQuestObj(cat,ci,0,chain[0]));
-    });
-  });
-  return q;
+  return {p:[],i:[],d:[],s:[]};
 }
 
+  function confirmReset(){
+  const pw=prompt('Enter your dashboard password to confirm reset:');
+  if(!pw)return;
+  sbGet('auth_password').then(stored=>{
+    if(pw===(stored||DEFAULT_PW)){
+      if(confirm('This will delete ALL your data permanently. Are you sure?'))resetAll();
+    } else {
+      alert('Incorrect password. Reset cancelled.');
+    }
+  });
+}
+  
 function makeQuestObj(cat,chainIdx,stepIdx,step){
   return{
     id:cat+'_'+chainIdx+'_'+stepIdx+'_'+Date.now()+Math.floor(Math.random()*9999),
