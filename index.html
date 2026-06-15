@@ -377,6 +377,13 @@ button{cursor:pointer}
     <div class="row-hd"><div class="ttl">Penalties</div><span class="sub">check if violated today</span></div>
     <div id="pen-list"></div>
   </div>
+  <div class="card" id="quest-actions-section" style="display:none">
+  <div class="row-hd">
+    <div class="ttl">Active quest actions</div>
+    <span class="sub">next milestone per quest</span>
+  </div>
+  <div id="quest-actions-list"></div>
+</div>
   <div class="card">
     <div class="row-hd"><div class="ttl">This week</div><span class="sub" id="week-avg"></span></div>
     <div class="week-grid" id="week-grid"></div>
@@ -820,6 +827,59 @@ function guessEmoji(name,tier){
   return tier===3?'🎁':tier===2?'🌟':'⭐';
 }
 
+function renderQuestActions(tk){
+  const section=g('quest-actions-section');
+  if(!section)return;
+  const actions=[];
+  ['p','i','d','s'].forEach(cat=>{
+    (quests[cat]||[]).filter(q=>!q.done).forEach(q=>{
+      /* Find next unticked milestone */
+      if(q.subquests&&q.subquests.length){
+        q.subquests.filter(sq=>!sq.done).forEach(sq=>{
+          const nextMs=(sq.milestones||[]).findIndex((_,i)=>!(sq.tickedMs||[]).includes(i));
+          if(nextMs>=0)actions.push({questId:q.id,sqIdx:q.subquests.indexOf(sq),msIdx:nextMs,label:sq.milestones[nextMs],questName:q.name,cat});
+        });
+      } else if(q.milestones&&q.milestones.length){
+        const nextMs=q.milestones.findIndex((_,i)=>!(q.tickedMs||[]).includes(i));
+        if(nextMs>=0)actions.push({questId:q.id,sqIdx:null,msIdx:nextMs,label:q.milestones[nextMs],questName:q.name,cat});
+      }
+    });
+  });
+  if(!actions.length){section.style.display='none';return;}
+  section.style.display='block';
+  const list=g('quest-actions-list');list.innerHTML='';
+  const COL={p:'#1D9E75',i:'#2563EB',d:'var(--acc)',s:'#EF9F27'};
+  const CATBG={p:'#E1F5EE',i:'#DBEAFE',d:'#EDE9FE',s:'#FAEEDA'};
+  const CATTX={p:'#085041',i:'#1E40AF',d:'#4C1D95',s:'#633806'};
+  actions.slice(0,5).forEach(a=>{
+    const row=document.createElement('div');row.className='habit-row';
+    const alreadyTicked=a.sqIdx!==null
+      ?(findQ(a.questId)?.subquests?.[a.sqIdx]?.tickedMs||[]).includes(a.msIdx)
+      :(findQ(a.questId)?.tickedMs||[]).includes(a.msIdx);
+    row.innerHTML=`
+      <input type="checkbox" ${alreadyTicked?'checked':''} style="width:18px;height:18px;accent-color:${COL[a.cat]};flex-shrink:0;cursor:pointer">
+      <span class="hname${alreadyTicked?' done':''}">${a.label}</span>
+      <span style="font-size:11px;padding:2px 7px;border-radius:99px;background:${CATBG[a.cat]};color:${CATTX[a.cat]};white-space:nowrap;flex-shrink:0;max-width:140px;overflow:hidden;text-overflow:ellipsis">${a.questName}</span>`;
+    row.querySelector('input').addEventListener('change',e=>{
+      const q=findQ(a.questId);if(!q)return;
+      if(a.sqIdx!==null){
+        const sq=q.subquests[a.sqIdx];if(!sq.tickedMs)sq.tickedMs=[];
+        if(e.target.checked){if(!sq.tickedMs.includes(a.msIdx))sq.tickedMs.push(a.msIdx);}
+        else sq.tickedMs=sq.tickedMs.filter(x=>x!==a.msIdx);
+        if(sq.tickedMs.length===sq.milestones.length)sq.done=true;
+        if(q.subquests.every(s=>s.done)&&!q.done){q.done=true;handleQuestComplete(q);}
+      } else {
+        if(!q.tickedMs)q.tickedMs=[];
+        if(e.target.checked){if(!q.tickedMs.includes(a.msIdx))q.tickedMs.push(a.msIdx);}
+        else q.tickedMs=q.tickedMs.filter(x=>x!==a.msIdx);
+        if(q.tickedMs.length===q.milestones.length&&!q.done){q.done=true;handleQuestComplete(q);}
+      }
+      saveQuests();renderAll();
+    });
+    list.appendChild(row);
+  });
+}
+
 function scheduleSave(){
   if(syncTimeout)clearTimeout(syncTimeout);
   syncTimeout=setTimeout(saveData,1500);
@@ -988,6 +1048,7 @@ function renderToday(tk,streak,perfStreak){
   });
   renderWeek(t,tk);
   if(pct>=100)showCel('Perfect day — optional habits earn overflow Rep.','cel-hab');
+  renderQuestActions(tk);
 }
 
 function renderWeek(t,tk){
