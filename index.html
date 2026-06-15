@@ -1168,8 +1168,18 @@ function handleQuestComplete(quest){
 }
 
 function toggleQuest(id,checked){
-  const q=findQ(id);if(!q)return;const wasDone=q.done;q.done=checked;
-  if(checked&&!wasDone)handleQuestComplete(q);
+  const q=findQ(id);if(!q)return;
+  const wasDone=q.done;q.done=checked;
+  if(checked&&!wasDone){
+    handleQuestComplete(q);
+  } else if(!checked&&wasDone){
+    /* Reverse the rep */
+    const diff=q.diff||'m';
+    const repEarned=REP_MAP[diff];
+    totalRepBank=Math.max(0,totalRepBank-repEarned);
+    repLog.push({note:'Quest uncompleted: '+q.name,amt:-repEarned,ts:Date.now()});
+    sbSet('repbank',totalRepBank);saveRewards();
+  }
   saveQuests();renderAll();
 }
 
