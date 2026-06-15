@@ -879,7 +879,9 @@ function todayHabitRep(){const tk=dk(tod());return repForPct(dayPct(tk))+overflo
 function questRepTotal(){return[...quests.p,...quests.i,...quests.d,...quests.s].filter(q=>q.done).reduce((a,q)=>a+REP_MAP[q.diff||'m'],0);}
 function calcWeekRep(){const t=tod();const mon=getMonday(t);let total=0,ovf=0,perf=0;for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);if(d>t)break;const k=dk(d);const p=dayPct(k);total+=repForPct(p);ovf+=overflowRep(k);if(p>=100)perf++;}return{total,ovf,perf};}
 function allTimeOverflow(){return Object.keys(comp).reduce((a,k)=>{const v=comp[k];return a+(Array.isArray(v)?overflowRep(k):0);},0);}
-function totalRepSpent(){return repLog.filter(e=>e.amt<0).reduce((a,e)=>a+Math.abs(e.amt),0);}
+function totalRepSpent(){
+  return repLog.filter(e=>e.amt<0&&e.note&&e.note.e.note.startsWith('Claimed:')||e.note.startsWith('Manual deduction')).reduce((a,e)=>a+Math.abs(e.amt),0);
+}
 function repBalance(){return Math.max(0,totalRepBank-totalRepSpent());}
 function updateRepBank(){
   const tk=dk(tod());
@@ -996,7 +998,33 @@ function renderWeek(t,tk){
 
 /* ===== QUESTS ===== */
 function renderQuests(){
-  /* Clean corrupted milestone data */
+  /* Hydrate chain quests that are missing milestones */
+  ['p','i','d'].forEach(cat=>{
+    (quests[cat]||[]).forEach(q=>{
+      if(q.chainCat===undefined)return;
+      const chainStep=QUEST_CHAINS[q.chainCat]?.[q.chainIdx]?.[q.stepIdx];
+      if(!chainStep)return;
+      /* Only fill in if empty */
+      if((!q.milestones||!q.milestones.length)&&(!q.subquests||!q.subquests.length)){
+        if(chainStep.subquests&&chainStep.subquests.length){
+          q.subquests=chainStep.subquests.map((sq,si)=>({
+            id:'sq_'+si+'_'+q.id,name:sq.name,done:false,
+            milestones:sq.milestones||[],tickedMs:[]
+          }));
+        } else if(chainStep.milestones){
+          q.milestones=chainStep.milestones;
+          if(!q.tickedMs)q.tickedMs=[];
+        }
+      }
+      /* Clean corrupted milestone entries */
+      if(q.milestones)q.milestones=q.milestones.filter(m=>typeof m==='string'&&m.length>1);
+      if(q.subquests)q.subquests.forEach(sq=>{
+        if(sq.milestones)sq.milestones=sq.milestones.filter(m=>typeof m==='string'&&m.length>1);
+      });
+    });
+  });
+  /* rest of renderQuests unchanged below */
+  
   ['p','i','d','s'].forEach(cat=>{
     (quests[cat]||[]).forEach(q=>{
       if(q.milestones)q.milestones=q.milestones.filter(m=>typeof m==='string'&&m.length>1);
@@ -1005,6 +1033,7 @@ function renderQuests(){
       });
     });
   });
+  
   const tabs=g('q-tabs');
   tabs.innerHTML=['p','i','d','s'].map(c=>`<button class="qtab${qTab===c?' q'+c:''}" onclick="setQTab('${c}')">${CAT_LBL[c]}</button>`).join('');
   g('sq-ai-section').style.display=qTab==='s'?'block':'none';
@@ -1058,8 +1087,7 @@ function questCard(q){
         <div class="qc-badges">
           <span class="badge ${BCAT[qTab]}">${CAT_LBL[qTab]}</span>
           <span class="badge ${DIFF_CLS[diff]}">${DIFF_LBL[diff]}</span>
-          <span class="badge bxp">${earned}/${XP_MAP[diff]} XP</span>
-          <span class="badge" style="background:#FAEEDA;color:#633806">${REP_MAP[diff]} Rep</span>
+          <span class="badge" style="background:#FAEEDA;color:#633806">${REP_MAP[diff]} Rep on completion</span>
           ${chainBadge}${smartBadge}
           ${q.done?'<span class="badge bdone">Done</span>':''}
         </div>
