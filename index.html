@@ -880,7 +880,7 @@ function questRepTotal(){return[...quests.p,...quests.i,...quests.d,...quests.s]
 function calcWeekRep(){const t=tod();const mon=getMonday(t);let total=0,ovf=0,perf=0;for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);if(d>t)break;const k=dk(d);const p=dayPct(k);total+=repForPct(p);ovf+=overflowRep(k);if(p>=100)perf++;}return{total,ovf,perf};}
 function allTimeOverflow(){return Object.keys(comp).reduce((a,k)=>{const v=comp[k];return a+(Array.isArray(v)?overflowRep(k):0);},0);}
 function totalRepSpent(){
-  return repLog.filter(e=>e.amt<0&&e.note&&e.note.e.note.startsWith('Claimed:')||e.note.startsWith('Manual deduction')).reduce((a,e)=>a+Math.abs(e.amt),0);
+  return repLog.filter(e=>e.amt<0&&e.note&&e.note.startsWith('Claimed:')||e.note.startsWith('Manual deduction')).reduce((a,e)=>a+Math.abs(e.amt),0);
 }
 function repBalance(){return Math.max(0,totalRepBank-totalRepSpent());}
 function updateRepBank(){
