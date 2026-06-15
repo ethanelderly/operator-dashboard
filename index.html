@@ -996,6 +996,15 @@ function renderWeek(t,tk){
 
 /* ===== QUESTS ===== */
 function renderQuests(){
+  /* Clean corrupted milestone data */
+  ['p','i','d','s'].forEach(cat=>{
+    (quests[cat]||[]).forEach(q=>{
+      if(q.milestones)q.milestones=q.milestones.filter(m=>typeof m==='string'&&m.length>1);
+      if(q.subquests)q.subquests.forEach(sq=>{
+        if(sq.milestones)sq.milestones=sq.milestones.filter(m=>typeof m==='string'&&m.length>1);
+      });
+    });
+  });
   const tabs=g('q-tabs');
   tabs.innerHTML=['p','i','d','s'].map(c=>`<button class="qtab${qTab===c?' q'+c:''}" onclick="setQTab('${c}')">${CAT_LBL[c]}</button>`).join('');
   g('sq-ai-section').style.display=qTab==='s'?'block':'none';
@@ -1034,7 +1043,7 @@ function questCard(q){
   const prog=questProgress(q);const diff=q.diff||'m';
   const earned=Math.round(XP_MAP[diff]*(prog/100));
   const next=q.done?getChainNext(q):null;
-  const isChained=q.chainCat!==undefined&&QUEST_CHAINS[q.chainCat];
+  const isChained=q.chainCat!==undefined&&QUEST_CHAINS[q.chainCat]?.[q.chainIdx]?.length>0;
   const card=document.createElement('div');
   card.className='quest-card'+(q.expanded?' expanded':'');
   card.id='qcard_'+q.id;
