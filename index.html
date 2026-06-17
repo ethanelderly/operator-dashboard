@@ -570,6 +570,16 @@ button{cursor:pointer}
     <div class="del-hint"><i class="ti ti-hand-stop" style="font-size:12px"></i> Hold ✕ 2 s to remove</div>
   </div>
   <div class="card">
+    <div class="row-hd"><div class="ttl">To-Do</div><span class="sub" id="todo-hint"></span></div>
+    <div id="todo-list"></div>
+    <div class="add-row">
+      <input type="text" id="todo-name" placeholder="Add a small task…" style="flex:1;min-width:120px" onkeydown="if(event.key==='Enter')addTodo()">
+      <input type="number" id="todo-xp" placeholder="XP" value="10" min="1" style="width:56px" onkeydown="if(event.key==='Enter')addTodo()">
+      <button class="btn-sm btn-acc" onclick="addTodo()">+ Add</button>
+    </div>
+    <div class="del-hint"><i class="ti ti-hand-stop" style="font-size:12px"></i> Hold ✕ 2 s to remove</div>
+  </div>
+  <div class="card">
     <div class="row-hd"><div class="ttl">Penalties</div><span class="sub">check if violated today</span></div>
     <div id="pen-list"></div>
   </div>
@@ -1024,7 +1034,7 @@ function questRepBreakdown(q){
 function calcQuestRep(q){return questRepBreakdown(q).total;}
 
 /* ===== STATE ===== */
-let core,opt,pen,comp,optComp,penComp,quests,rewards,repLog,manualRep,shownLvUp,totalRepBank,repByDay,questmasters,userProfile;
+let core,opt,pen,comp,optComp,penComp,quests,rewards,repLog,manualRep,shownLvUp,totalRepBank,repByDay,questmasters,userProfile,todos,todoComp;
 let optOpen=false,qTab='p',currentView='today';
 let syncTimeout=null;
 let expandedQM=null;
@@ -1059,11 +1069,12 @@ function doLogout(){localStorage.removeItem('od9_session');ss('login');g('login-
 /* ===== DATA ===== */
 async function loadData(){
   setSyncState('syncing');
-  const keys=['core','opt','pen','comp','optc','penc','quests','rewards','replog','manrep','shownlv','theme','repbank','repbyday','qm','profile'];
+  const keys=['core','opt','pen','comp','optc','penc','quests','rewards','replog','manrep','shownlv','theme','repbank','repbyday','qm','profile','todos','todoc'];
   const vals=await Promise.all(keys.map(k=>sbGet(k)));
   const d=Object.fromEntries(keys.map((k,i)=>[k,vals[i]]));
   core=d.core||CORE_DEF;opt=d.opt||OPT_DEF;pen=d.pen||PEN_DEF;
   comp=d.comp||{};optComp=d.optc||{};penComp=d.penc||{};
+  todos=d.todos||[];todoComp=d.todoc||{};
   quests=d.quests||buildInitialQuests();
   /* Ensure side quests array exists */
   if(!quests.s)quests.s=[];
@@ -1183,7 +1194,8 @@ async function saveData(){
     sbSet('comp',comp),sbSet('optc',optComp),sbSet('penc',penComp),
     sbSet('quests',quests),sbSet('rewards',rewards),
     sbSet('replog',repLog),sbSet('manrep',manualRep),
-    sbSet('shownlv',shownLvUp),sbSet('repbank',totalRepBank),sbSet('repbyday',repByDay)
+    sbSet('shownlv',shownLvUp),sbSet('repbank',totalRepBank),sbSet('repbyday',repByDay),
+    sbSet('todos',todos),sbSet('todoc',todoComp)
   ]);
   setSyncState('ok');
 }
@@ -1193,7 +1205,7 @@ function setSyncState(st){
   const l=g('sync-label');if(l)l.textContent=st==='syncing'?'Syncing…':st==='err'?'Sync error':'Synced';
 }
 async function resetAll(){
-  const keys=['core','opt','pen','comp','optc','penc','quests','rewards','replog','manrep','shownlv','repbank','repbyday'];
+  const keys=['core','opt','pen','comp','optc','penc','quests','rewards','replog','manrep','shownlv','repbank','repbyday','todos','todoc'];
   await Promise.all(keys.map(k=>sbDel(k)));
   await loadData();renderAll();showCel('Data reset.','cel-lv');
 }
@@ -1220,7 +1232,7 @@ function getC(k){const v=comp[k];return Array.isArray(v)?v:[];}
 function getOC(k){const v=optComp[k];return Array.isArray(v)?v:[];}
 function getPC(k){const v=penComp[k];return Array.isArray(v)?v:[];}
 function coreXP(key){const c=getC(key),pc=getPC(key);return core.filter(h=>c.includes(h.id)).reduce((a,h)=>a+h.xp,0)+pen.filter(h=>pc.includes(h.id)).reduce((a,h)=>a+h.xp,0);}
-function optXP(key){return opt.filter(h=>getOC(key).includes(h.id)).reduce((a,h)=>a+h.xp,0);}
+function optXP(key){return opt.filter(h=>getOC(key).includes(h.id)).reduce((a,h)=>a+h.xp,0)+(todoComp[key]||0);}
 /* Habits with freq<7 are weekly-target (e.g. gym 4×/week) — not required every day for a perfect day */
 function isWeeklyHabit(h){return typeof h.freq==='number'&&h.freq>0&&h.freq<7;}
 function maxCoreXP(){return core.filter(h=>!isWeeklyHabit(h)).reduce((a,h)=>a+h.xp,0)}
@@ -1230,12 +1242,12 @@ function dayPct(key){const m=maxCoreXP();return m?Math.min(100,Math.round(Math.m
 function overflowXP(key){return dayPct(key)>=100?optXP(key):0}
 function overflowRep(key){return Math.floor(overflowXP(key)/OVERFLOW_RATE)}
 function statXP(key,stat){const c=getC(key),oc=getOC(key),pc=getPC(key);return core.filter(h=>h.stat===stat&&c.includes(h.id)).reduce((a,h)=>a+h.xp,0)+opt.filter(h=>h.stat===stat&&oc.includes(h.id)).reduce((a,h)=>a+h.xp,0)+pen.filter(h=>h.stat===stat&&pc.includes(h.id)).reduce((a,h)=>a+h.xp,0);}
-function calcStreak(){let s=0;const d=new Date(tod());const tk=dk(tod());for(let i=0;i<365;i++){const k=dk(d);const any=getC(k).length>0||getOC(k).length>0;if(any)s++;else if(k!==tk)break;d.setDate(d.getDate()-1);}return s;}
+function calcStreak(){let s=0;const d=new Date(tod());const tk=dk(tod());for(let i=0;i<365;i++){const k=dk(d);const any=getC(k).length>0||getOC(k).length>0||(todoComp[k]||0)>0;if(any)s++;else if(k!==tk)break;d.setDate(d.getDate()-1);}return s;}
 function calcPerfectStreak(){let s=0;const d=new Date(tod());const tk=dk(tod());for(let i=0;i<365;i++){const k=dk(d);if(dayPct(k)>=100)s++;else if(k!==tk)break;d.setDate(d.getDate()-1);}return s;}
 function getLv(s){let c=LEVELS[0];for(const l of LEVELS){if(s>=l.req)c=l;}return c;}
 function getNextLv(s){for(const l of LEVELS){if(l.req>s)return l;}return null;}
 /* Lifetime totals across every tracked day, for the player profile card */
-function allDayKeys(){return Array.from(new Set([...Object.keys(comp),...Object.keys(optComp),...Object.keys(penComp)]));}
+function allDayKeys(){return Array.from(new Set([...Object.keys(comp),...Object.keys(optComp),...Object.keys(penComp),...Object.keys(todoComp)]));}
 function lifetimeXP(){return allDayKeys().reduce((a,k)=>a+Math.max(0,coreXP(k))+Math.max(0,optXP(k)),0);}
 function lifetimeStatXP(stat){return allDayKeys().reduce((a,k)=>a+Math.max(0,statXP(k,stat)),0);}
 
@@ -1341,6 +1353,15 @@ function renderToday(tk,streak,perfStreak){
     row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:#EF9F27;flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}<span class="xpb">+${h.xp}</span>${rNote}<button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','opt')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('hd_opt_'+h.id)}`;
     row.querySelector('input').addEventListener('change',e=>toggleO(h.id,e.target.checked,e));
     optList.appendChild(row);attachHold('hd_opt_'+h.id,()=>deleteHabit(h.id,'opt'));
+  });
+  const todoList=g('todo-list');todoList.innerHTML='';
+  g('todo-hint').textContent=todos.length?todos.length+' pending':'';
+  if(!todos.length)todoList.innerHTML='<div style="font-size:12px;color:var(--tx-s);padding:6px 0">No to-dos — add one below.</div>';
+  todos.forEach(td=>{
+    const row=document.createElement('div');row.className='habit-row';
+    row.innerHTML=`<input type="checkbox" style="width:18px;height:18px;accent-color:var(--acc);flex-shrink:0;cursor:pointer" aria-label="${td.name}"><span class="hname">${td.name}</span><span class="xpb">+${td.xp}</span>${delBtn('tdo_'+td.id)}`;
+    row.querySelector('input').addEventListener('change',e=>{if(e.target.checked)toggleTodo(td.id,e);});
+    todoList.appendChild(row);attachHold('tdo_'+td.id,()=>deleteTodo(td.id));
   });
   const pc=getPC(tk);const penList=g('pen-list');penList.innerHTML='';
   pen.forEach(h=>{
@@ -2101,6 +2122,24 @@ function toggleH(id,checked,e){const tk=dk(tod());let c=getC(tk);c=checked?[...n
 function toggleO(id,checked,e){const tk=dk(tod());let c=getOC(tk);c=checked?[...new Set([...c,id])]:c.filter(x=>x!==id);optComp[tk]=c;if(checked&&e){const h=opt.find(x=>x.id===id);if(h)showXpPop(e,h.xp);}updateRepBank();scheduleSave();renderAll();}
 function toggleP(id,checked){const tk=dk(tod());let c=getPC(tk);c=checked?[...new Set([...c,id])]:c.filter(x=>x!==id);penComp[tk]=c;updateRepBank();scheduleSave();renderAll();}
 function toggleOpt(){optOpen=!optOpen;g('opt-list').style.display=optOpen?'block':'none';g('opt-chev').style.transform=optOpen?'rotate(90deg)':'';}
+
+/* ===== TO-DO (ad-hoc daily tasks, separate from fixed habits) ===== */
+function addTodo(){
+  const name=g('todo-name').value.trim();const xp=Math.max(1,parseInt(g('todo-xp').value)||10);
+  if(!name)return;
+  todos.push({id:'td'+Date.now(),name,xp,createdAt:Date.now()});
+  g('todo-name').value='';g('todo-xp').value='10';
+  scheduleSave();renderAll();
+}
+function toggleTodo(id,e){
+  const idx=todos.findIndex(t=>t.id===id);if(idx<0)return;
+  const item=todos[idx];const tk=dk(tod());
+  todoComp[tk]=(todoComp[tk]||0)+item.xp;
+  todos.splice(idx,1);
+  if(e)showXpPop(e,item.xp);
+  updateRepBank();scheduleSave();renderAll();
+}
+function deleteTodo(id){todos=todos.filter(t=>t.id!==id);scheduleSave();renderAll();}
 function deleteHabit(id,type){if(type==='core'){core=core.filter(h=>h.id!==id);}else if(type==='opt'){opt=opt.filter(h=>h.id!==id);}else{pen=pen.filter(h=>h.id!==id);}scheduleSave();renderAll();}
 
 /* ===== HABIT EDIT MODAL ===== */
