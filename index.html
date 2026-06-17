@@ -106,6 +106,9 @@ button{cursor:pointer}
 .habit-row:last-child{border-bottom:none}
 .hname{flex:1;font-size:13px;line-height:1.35}
 .hname.done{text-decoration:line-through;color:var(--tx-s)}
+.qa-row{padding:7px 0;cursor:default}
+.qa-row .hname{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.qa-row .qa-tag{font-size:10.5px;padding:2px 8px;border-radius:99px;white-space:nowrap;flex-shrink:0;max-width:120px;overflow:hidden;text-overflow:ellipsis;font-weight:500}
 .tag{font-size:11px;padding:2px 7px;border-radius:99px;white-space:nowrap;font-weight:500}
 .tp{background:#E1F5EE;color:#085041}
 .tic{background:#DBEAFE;color:#1E40AF}
@@ -294,11 +297,14 @@ button{cursor:pointer}
   .gstrip{gap:4px}
   .gs-num{font-size:15px}
   .nav-btn{font-size:9px}
-  .habit-row{flex-wrap:nowrap;gap:6px}
-  .hname{font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .habit-row .tag{font-size:10px;padding:1px 5px;flex-shrink:0}
-  .habit-row .quest-link{max-width:70px;font-size:9px}
-  .habit-row .xpb{font-size:10px;min-width:28px}
+  .habit-row{flex-wrap:nowrap;gap:6px;align-items:flex-start;padding:8px 0}
+  .hname{font-size:11.5px;line-height:1.35;min-width:0;word-break:break-word;padding-top:1px}
+  .habit-row .tag{font-size:9px;padding:1px 4px;flex-shrink:0;margin-top:1px}
+  .habit-row .quest-link{max-width:60px;font-size:9px;margin-top:1px}
+  .habit-row .xpb{font-size:10px;min-width:26px;margin-top:1px}
+  .habit-row input[type=checkbox]{margin-top:1px}
+  .qa-row{align-items:center;padding:7px 0}
+  .qa-row .hname{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-top:0}
 }
 .next-pill{display:flex;align-items:center;gap:8px;background:var(--acc-l);border:0.5px solid var(--acc-m);border-radius:var(--r-md);padding:8px 12px;margin:10px 0 4px;color:var(--acc-dp)}
 @media(prefers-color-scheme:dark){.next-pill{background:color-mix(in srgb,var(--acc) 18%,var(--bg-s));color:var(--tx-p)}}
@@ -311,11 +317,24 @@ button{cursor:pointer}
 .qedit-sub{font-size:12px;color:var(--tx-s);margin-bottom:14px;line-height:1.35}
 .qedit-lbl{font-size:11px;font-weight:600;color:var(--tx-s);letter-spacing:.06em;text-transform:uppercase;margin:10px 0 4px;display:block}
 .qedit-box select,.qedit-box input{width:100%;padding:8px 10px;font-size:13px}
+.qedit-box textarea{width:100%;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;min-height:48px;line-height:1.4}
 .qedit-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
 .qc-edit{background:none;border:none;color:var(--tx-s);padding:4px 6px;cursor:pointer;font-size:14px;border-radius:6px;flex-shrink:0}
 .qc-edit:hover{background:var(--bg-t);color:var(--acc)}
 .qc-tag{font-size:10px;padding:1px 6px;border-radius:99px;background:var(--bg-t);color:var(--tx-s);border:0.5px solid var(--bd-t)}
 .umbrella-badge{font-size:10px;padding:2px 7px;border-radius:99px;background:linear-gradient(90deg,var(--acc-d),var(--acc));color:#fff;font-weight:600}
+.qe-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.qe-ms-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.qe-ms-row input{flex:1;margin:0}
+.qe-row-x{background:none;border:none;color:var(--tx-s);font-size:17px;line-height:1;cursor:pointer;padding:2px 7px;border-radius:6px;flex-shrink:0}
+.qe-row-x:hover{background:var(--bg-t);color:#A32D2D}
+.qe-subq-block{border:0.5px solid var(--bd-t);border-radius:var(--r-md);padding:10px;margin-bottom:10px;background:var(--bg-s)}
+.qe-subq-hd{display:flex;gap:6px;align-items:center;margin-bottom:8px}
+.qe-subq-hd input{flex:1;margin:0;font-weight:600}
+.qe-add-btn{background:none;border:1px dashed var(--bd-t);color:var(--tx-s);font-size:12px;padding:7px 10px;border-radius:var(--r-md);cursor:pointer;width:100%;margin-top:2px;text-align:center}
+.qe-add-btn:hover{border-color:var(--acc);color:var(--acc)}
+.qedit-danger{background:none;border:none;color:#A32D2D;font-size:12px;padding:10px 0 0;cursor:pointer;width:100%;text-align:left}
+.qedit-danger:hover{text-decoration:underline}
 
 /* QUESTMASTERS */
 .gs-pill{background:var(--bg-s);border:0.5px solid var(--bd-t);border-radius:var(--r-md);padding:8px 12px;flex:1;min-width:90px;text-align:center}
@@ -325,6 +344,10 @@ button{cursor:pointer}
 .qm-hd{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer}
 .qm-hd:hover{background:color-mix(in srgb,var(--acc) 4%,transparent)}
 .qm-avatar{width:40px;height:40px;border-radius:50%;background:var(--acc-l);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.profile-hd{display:flex;align-items:center;gap:14px}
+.profile-avatar{width:56px;height:56px;border-radius:50%;background:var(--acc-l);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;cursor:pointer;border:0.5px solid var(--bd-t)}
+.profile-id{flex:1;min-width:0}
+.profile-name{font-size:16px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .qm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px;padding:0 16px 14px;border-top:0.5px solid var(--bd-t);padding-top:12px}
 .qm-stat{text-align:center}
 .qm-stat-n{font-size:15px;font-weight:700}
@@ -355,30 +378,109 @@ button{cursor:pointer}
 <!-- QUEST EDIT MODAL -->
 <div class="qedit-overlay" id="qedit-overlay" onclick="closeQEdit()">
   <div class="qedit-box" onclick="event.stopPropagation()">
-    <div class="qedit-hd">Reclassify quest</div>
+    <div class="qedit-hd">Edit quest</div>
     <div class="qedit-sub" id="qedit-qname"></div>
-    <label class="qedit-lbl">Category</label>
-    <select id="qedit-cat">
-      <option value="p">Physique</option>
-      <option value="i">Income</option>
-      <option value="d">Discipline</option>
-      <option value="s">Side quest</option>
-    </select>
-    <label class="qedit-lbl">Difficulty</label>
-    <select id="qedit-diff">
-      <option value="e">Easy</option>
-      <option value="m">Medium</option>
-      <option value="h">Hard</option>
-    </select>
+
+    <label class="qedit-lbl">Name</label>
+    <input id="qedit-name" type="text" placeholder="Quest name">
+
+    <label class="qedit-lbl">Description</label>
+    <textarea id="qedit-sub" placeholder="What does done look like?"></textarea>
+
+    <div class="qe-2col">
+      <div>
+        <label class="qedit-lbl">Category</label>
+        <select id="qedit-cat">
+          <option value="p">Physique</option>
+          <option value="i">Income</option>
+          <option value="d">Discipline</option>
+          <option value="s">Side quest</option>
+        </select>
+      </div>
+      <div>
+        <label class="qedit-lbl">Difficulty</label>
+        <select id="qedit-diff">
+          <option value="e">Easy</option>
+          <option value="m">Medium</option>
+          <option value="h">Hard</option>
+        </select>
+      </div>
+    </div>
+
     <label class="qedit-lbl">Tags <span style="color:var(--tx-s);font-weight:400">(comma separated)</span></label>
     <input id="qedit-tags" type="text" placeholder="e.g. strength, morning, work">
     <label class="qedit-lbl">Questmaster</label>
     <select id="qedit-qm"></select>
     <label class="qedit-lbl" id="qedit-income-lbl" style="display:none">Income on completion <span style="color:var(--tx-s);font-weight:400">(£)</span></label>
     <input id="qedit-income" type="number" min="0" step="any" placeholder="0" style="display:none">
+
+    <label class="qedit-lbl">Rep scaling <span style="color:var(--tx-s);font-weight:400">(drives dynamic Rep reward)</span></label>
+    <div class="qe-2col">
+      <div><input id="qedit-weeks" type="number" min="0" step="any" placeholder="Est. weeks"></div>
+      <div><input id="qedit-complexity" type="number" min="1" max="10" step="1" placeholder="Complexity 1–10"></div>
+    </div>
+
+    <label class="qedit-lbl">Milestones &amp; subquests</label>
+    <div id="qedit-structure"></div>
+    <button type="button" class="qe-add-btn" id="qedit-add-ms" onclick="qeAddMilestone()">+ Add milestone</button>
+    <button type="button" class="qe-add-btn" id="qedit-add-sq" onclick="qeAddSubquest()">+ Add subquest</button>
+
+    <button type="button" class="qedit-danger" onclick="qeDeleteQuest()">Delete quest</button>
+
     <div class="qedit-actions">
       <button class="btn-sm" onclick="closeQEdit()">Cancel</button>
       <button class="btn-main" style="width:auto;padding:8px 16px;margin:0" onclick="saveQEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- HABIT EDIT MODAL -->
+<div class="qedit-overlay" id="hedit-overlay" onclick="closeHEdit()">
+  <div class="qedit-box" style="max-width:320px" onclick="event.stopPropagation()">
+    <div class="qedit-hd">Edit habit</div>
+    <div class="qedit-sub" id="hedit-sub">Update any field, then save.</div>
+    <label class="qedit-lbl">Name</label>
+    <input id="hedit-name" type="text" placeholder="Habit name">
+    <div class="qe-2col">
+      <div>
+        <label class="qedit-lbl" id="hedit-xp-lbl">XP value</label>
+        <input id="hedit-xp" type="number" step="1" placeholder="20">
+      </div>
+      <div>
+        <label class="qedit-lbl">Category</label>
+        <select id="hedit-stat">
+          <option value="p">Physique</option>
+          <option value="i">Income</option>
+          <option value="d">Discipline</option>
+        </select>
+      </div>
+    </div>
+    <button type="button" class="qedit-danger" onclick="hEditDelete()">Delete habit</button>
+    <div class="qedit-actions">
+      <button class="btn-sm" onclick="closeHEdit()">Cancel</button>
+      <button class="btn-main" style="width:auto;padding:8px 16px;margin:0" onclick="saveHEdit()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE EDIT MODAL -->
+<div class="qedit-overlay" id="pedit-overlay" onclick="closePEdit()">
+  <div class="qedit-box" style="max-width:320px" onclick="event.stopPropagation()">
+    <div class="qedit-hd">Edit profile</div>
+    <div class="qedit-sub">Set your avatar and display name.</div>
+    <div class="qe-2col">
+      <div>
+        <label class="qedit-lbl">Avatar</label>
+        <input id="pedit-avatar" type="text" placeholder="🧑" maxlength="2" style="text-align:center">
+      </div>
+      <div>
+        <label class="qedit-lbl">Name</label>
+        <input id="pedit-name" type="text" placeholder="Operator">
+      </div>
+    </div>
+    <div class="qedit-actions">
+      <button class="btn-sm" onclick="closePEdit()">Cancel</button>
+      <button class="btn-main" style="width:auto;padding:8px 16px;margin:0" onclick="savePEdit()">Save changes</button>
     </div>
   </div>
 </div>
@@ -523,6 +625,26 @@ button{cursor:pointer}
 </div>
 
 <div class="view" id="view-levels">
+  <div class="card profile-card">
+    <div class="profile-hd">
+      <div class="profile-avatar" id="pf-avatar" onclick="openPEdit()" title="Edit profile">🧑</div>
+      <div class="profile-id">
+        <div class="profile-name" id="pf-name">Operator</div>
+        <div class="sub" id="pf-lv-sub">Level 1 — Baseline</div>
+      </div>
+      <button class="qc-edit" onclick="openPEdit()" title="Edit profile"><i class="ti ti-pencil"></i></button>
+    </div>
+    <div class="gstrip" style="grid-template-columns:repeat(2,1fr);margin-top:12px">
+      <div class="gs"><div class="gs-num" id="pf-xp" style="color:var(--acc-d)">0</div><div class="gs-lbl">total XP earned</div></div>
+      <div class="gs"><div class="gs-num" id="pf-rep" style="color:#BA7517">0</div><div class="gs-lbl">total Rep earned</div></div>
+    </div>
+    <div class="gstrip" style="margin-top:6px;margin-bottom:0">
+      <div class="gs"><div class="gs-num" id="pf-p" style="color:#085041">0</div><div class="gs-lbl">Physique</div></div>
+      <div class="gs"><div class="gs-num" id="pf-i" style="color:#1E40AF">0</div><div class="gs-lbl">Income</div></div>
+      <div class="gs"><div class="gs-num" id="pf-d" style="color:var(--acc-d)">0</div><div class="gs-lbl">Discipline</div></div>
+      <div class="gs"><div class="gs-num" id="pf-streak" style="color:var(--acc)">0</div><div class="gs-lbl">perfect days</div></div>
+    </div>
+  </div>
   <div class="card">
     <div class="row-hd">
       <div><div class="ttl" id="lv-title-big">Level 1 — Baseline</div><div class="sub" id="lv-streak-sub"></div></div>
@@ -828,7 +950,8 @@ function makeQuestObj(cat,chainIdx,stepIdx,step){
 }
 
 const XP_MAP={e:15,m:30,h:50};
-const REP_MAP={e:10,m:25,h:50};
+const REP_MAP={e:10,m:25,h:50}; /* legacy flat fallback — see calcQuestRep() for dynamic scaling */
+const REP_BASE={e:6,m:14,h:24};
 const DIFF_LBL={e:'Easy',m:'Medium',h:'Hard'};
 const CAT_LBL={p:'Physique',i:'Income',d:'Discipline',s:'Side quest'};
 const BCAT={p:'bq-p',i:'bq-i',d:'bq-d',s:'bq-s'};
@@ -841,8 +964,40 @@ const PROG_COL={p:'#1D9E75',i:'#2563EB',d:'var(--acc)',s:'#EF9F27'};
 const ICON_MAP={p:'ti-barbell',i:'ti-briefcase',d:'ti-brain',s:'ti-sparkles'};
 const ICON_CLS={p:'qci-p',i:'qci-i',d:'qci-d',s:'qci-s'};
 
+/* ===== DYNAMIC REP SCORING =====
+   REP no longer comes from a flat Easy/Medium/Hard lookup. It scales with how
+   much quest actually is: how many milestones/subquests it has, how long it's
+   estimated to take, and how complex the AI (or the user) judges the objective
+   to be. Two quests of the same difficulty can therefore award very different
+   Rep if one is a five-minute task and the other is a multi-month build. */
+function questMilestoneCounts(q){
+  if(q.subquests&&q.subquests.length){
+    return{msCount:q.subquests.reduce((a,sq)=>a+(sq.milestones||[]).length,0),sqCount:q.subquests.length};
+  }
+  return{msCount:(q.milestones||[]).length,sqCount:0};
+}
+/* Rough fallback effort estimate (in weeks) when no AI/user estimate exists */
+function inferQuestWeeks(diff,msCount,sqCount){
+  const base=diff==='e'?1:diff==='h'?6:3;
+  return base+msCount*0.5+sqCount*1.5;
+}
+function questRepBreakdown(q){
+  const diff=q.diff||'m';
+  const{msCount,sqCount}=questMilestoneCounts(q);
+  const weeks=(typeof q.estimatedWeeks==='number'&&q.estimatedWeeks>0)?q.estimatedWeeks:inferQuestWeeks(diff,msCount,sqCount);
+  const complexity=(typeof q.complexity==='number'&&q.complexity>0)?Math.min(10,q.complexity):5;
+  const base=REP_BASE[diff]||14;
+  const milestoneRep=msCount*2.5;
+  const subquestRep=sqCount*9;
+  const durationRep=weeks*1.8;
+  const complexityRep=complexity*1.6;
+  const total=Math.max(5,Math.round(base+milestoneRep+subquestRep+durationRep+complexityRep));
+  return{base,msCount,sqCount,weeks,complexity,milestoneRep:Math.round(milestoneRep),subquestRep:Math.round(subquestRep),durationRep:Math.round(durationRep),complexityRep:Math.round(complexityRep),total};
+}
+function calcQuestRep(q){return questRepBreakdown(q).total;}
+
 /* ===== STATE ===== */
-let core,opt,pen,comp,optComp,penComp,quests,rewards,repLog,manualRep,shownLvUp,totalRepBank,repByDay,questmasters;
+let core,opt,pen,comp,optComp,penComp,quests,rewards,repLog,manualRep,shownLvUp,totalRepBank,repByDay,questmasters,userProfile;
 let optOpen=false,qTab='p',currentView='today';
 let syncTimeout=null;
 let expandedQM=null;
@@ -877,7 +1032,7 @@ function doLogout(){localStorage.removeItem('od9_session');ss('login');g('login-
 /* ===== DATA ===== */
 async function loadData(){
   setSyncState('syncing');
-  const keys=['core','opt','pen','comp','optc','penc','quests','rewards','replog','manrep','shownlv','theme','repbank','repbyday','qm'];
+  const keys=['core','opt','pen','comp','optc','penc','quests','rewards','replog','manrep','shownlv','theme','repbank','repbyday','qm','profile'];
   const vals=await Promise.all(keys.map(k=>sbGet(k)));
   const d=Object.fromEntries(keys.map((k,i)=>[k,vals[i]]));
   core=d.core||CORE_DEF;opt=d.opt||OPT_DEF;pen=d.pen||PEN_DEF;
@@ -892,6 +1047,7 @@ async function loadData(){
   manualRep=d.manrep||0;shownLvUp=d.shownlv||1;
   totalRepBank=d.repbank||0;repByDay=d.repbyday||{};
   questmasters=d.qm||[{id:'qm_self',name:'Self',emoji:'🧭'}];
+  userProfile=d.profile||{avatar:'🧑',name:'Operator'};
   if(d.theme)applyTheme(d.theme);
   setSyncState('ok');
 }
@@ -919,6 +1075,23 @@ function guessEmoji(name,tier){
   return tier===3?'🎁':tier===2?'🌟':'⭐';
 }
 
+/* Condense a milestone sentence into a short, scannable action label.
+   Strips filler lead-ins and clips to a word boundary; the original text
+   is never lost — callers should put it in a title="" tooltip. */
+function shortenAction(text){
+  if(!text)return'';
+  let t=String(text).trim();
+  t=t.replace(/^(make sure to|try to|work on|continue to|begin to|start to|remember to|focus on|aim to|plan to)\s+/i,'');
+  t=t.charAt(0).toUpperCase()+t.slice(1);
+  const MAX=46;
+  if(t.length>MAX){
+    let cut=t.slice(0,MAX);
+    const lastSpace=cut.lastIndexOf(' ');
+    if(lastSpace>20)cut=cut.slice(0,lastSpace);
+    t=cut.trim()+'…';
+  }
+  return t;
+}
 function renderQuestActions(tk){
   const section=g('quest-actions-section');
   if(!section)return;
@@ -944,14 +1117,14 @@ function renderQuestActions(tk){
   const CATBG={p:'#E1F5EE',i:'#DBEAFE',d:'#EDE9FE',s:'#FAEEDA'};
   const CATTX={p:'#085041',i:'#1E40AF',d:'#4C1D95',s:'#633806'};
   actions.slice(0,5).forEach(a=>{
-    const row=document.createElement('div');row.className='habit-row';
+    const row=document.createElement('div');row.className='habit-row qa-row';
     const alreadyTicked=a.sqIdx!==null
       ?(findQ(a.questId)?.subquests?.[a.sqIdx]?.tickedMs||[]).includes(a.msIdx)
       :(findQ(a.questId)?.tickedMs||[]).includes(a.msIdx);
     row.innerHTML=`
       <input type="checkbox" ${alreadyTicked?'checked':''} style="width:18px;height:18px;accent-color:${COL[a.cat]};flex-shrink:0;cursor:pointer">
-      <span class="hname${alreadyTicked?' done':''}">${a.label}</span>
-      <span style="font-size:11px;padding:2px 7px;border-radius:99px;background:${CATBG[a.cat]};color:${CATTX[a.cat]};white-space:nowrap;flex-shrink:0;max-width:140px;overflow:hidden;text-overflow:ellipsis">${a.questName}</span>`;
+      <span class="hname${alreadyTicked?' done':''}" title="${qeEsc(a.label)}">${qeEsc(shortenAction(a.label))}</span>
+      <span class="qa-tag" style="background:${CATBG[a.cat]};color:${CATTX[a.cat]}" title="${qeEsc(a.questName)}">${qeEsc(a.questName)}</span>`;
     row.querySelector('input').addEventListener('change',e=>{
       const q=findQ(a.questId);if(!q)return;
       if(a.sqIdx!==null){
@@ -1030,11 +1203,15 @@ function calcStreak(){let s=0;const d=new Date(tod());const tk=dk(tod());for(let
 function calcPerfectStreak(){let s=0;const d=new Date(tod());const tk=dk(tod());for(let i=0;i<365;i++){const k=dk(d);if(dayPct(k)>=100)s++;else if(k!==tk)break;d.setDate(d.getDate()-1);}return s;}
 function getLv(s){let c=LEVELS[0];for(const l of LEVELS){if(s>=l.req)c=l;}return c;}
 function getNextLv(s){for(const l of LEVELS){if(l.req>s)return l;}return null;}
+/* Lifetime totals across every tracked day, for the player profile card */
+function allDayKeys(){return Array.from(new Set([...Object.keys(comp),...Object.keys(optComp),...Object.keys(penComp)]));}
+function lifetimeXP(){return allDayKeys().reduce((a,k)=>a+Math.max(0,coreXP(k))+Math.max(0,optXP(k)),0);}
+function lifetimeStatXP(stat){return allDayKeys().reduce((a,k)=>a+Math.max(0,statXP(k,stat)),0);}
 
 /* ===== REP ===== */
 function repForPct(p){if(p>=100)return 10;if(p>=80)return 7;if(p>=60)return 4;if(p>0)return 2;return 0;}
 function todayHabitRep(){const tk=dk(tod());return repForPct(dayPct(tk))+overflowRep(tk);}
-function questRepTotal(){return[...quests.p,...quests.i,...quests.d,...quests.s].filter(q=>q.done).reduce((a,q)=>a+REP_MAP[q.diff||'m'],0);}
+function questRepTotal(){return[...quests.p,...quests.i,...quests.d,...quests.s].filter(q=>q.done).reduce((a,q)=>a+calcQuestRep(q),0);}
 function calcWeekRep(){const t=tod();const mon=getMonday(t);let total=0,ovf=0,perf=0;for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);if(d>t)break;const k=dk(d);const p=dayPct(k);total+=repForPct(p);ovf+=overflowRep(k);if(p>=100)perf++;}return{total,ovf,perf};}
 function allTimeOverflow(){return Object.keys(comp).reduce((a,k)=>{const v=comp[k];return a+(Array.isArray(v)?overflowRep(k):0);},0);}
 function totalRepSpent(){
@@ -1121,7 +1298,7 @@ function renderToday(tk,streak,perfStreak){
     const aq=activeQuestForStat(h.stat);
     const qLink=aq?`<span class="quest-link" onclick="setView('quests')" title="${aq.name}">${aq.name.length>16?aq.name.slice(0,16)+'…':aq.name}</span>`:'';
     const accentCol=h.stat==='p'?'#1D9E75':h.stat==='i'?'#2563EB':'var(--acc)';
-    row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:${accentCol};flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}${qLink}<span class="xpb">+${h.xp}</span>${delBtn('hd_'+h.id)}`;
+    row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:${accentCol};flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}${qLink}<span class="xpb">+${h.xp}</span><button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','core')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('hd_'+h.id)}`;
     row.querySelector('input').addEventListener('change',e=>toggleH(h.id,e.target.checked,e));
     list.appendChild(row);attachHold('hd_'+h.id,()=>deleteHabit(h.id,'core'));
   });
@@ -1129,14 +1306,14 @@ function renderToday(tk,streak,perfStreak){
   opt.forEach(h=>{
     const done=oc.includes(h.id);const row=document.createElement('div');row.className='habit-row';
     const rNote=pct>=100?`<span style="font-size:11px;color:#BA7517">+${Math.floor(h.xp/OVERFLOW_RATE)} Rep</span>`:'';
-    row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:#EF9F27;flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}<span class="xpb">+${h.xp}</span>${rNote}${delBtn('hd_opt_'+h.id)}`;
+    row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:#EF9F27;flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}<span class="xpb">+${h.xp}</span>${rNote}<button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','opt')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('hd_opt_'+h.id)}`;
     row.querySelector('input').addEventListener('change',e=>toggleO(h.id,e.target.checked,e));
     optList.appendChild(row);attachHold('hd_opt_'+h.id,()=>deleteHabit(h.id,'opt'));
   });
   const pc=getPC(tk);const penList=g('pen-list');penList.innerHTML='';
   pen.forEach(h=>{
     const hit=pc.includes(h.id);const row=document.createElement('div');row.className='pen-row';
-    row.innerHTML=`<input type="checkbox" ${hit?'checked':''} style="width:18px;height:18px;accent-color:#E24B4A;flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="plbl">${h.name}</span><span class="pbadge">${h.xp} XP</span>${delBtn('pd_'+h.id)}`;
+    row.innerHTML=`<input type="checkbox" ${hit?'checked':''} style="width:18px;height:18px;accent-color:#E24B4A;flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="plbl">${h.name}</span><span class="pbadge">${h.xp} XP</span><button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','pen')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('pd_'+h.id)}`;
     row.querySelector('input').addEventListener('change',e=>toggleP(h.id,e.target.checked));
     penList.appendChild(row);attachHold('pd_'+h.id,()=>deleteHabit(h.id,'pen'));
   });
@@ -1288,7 +1465,7 @@ function questCard(q){
         <div class="qc-badges">
           <span class="badge ${BCAT[qTab]}">${CAT_LBL[qTab]}</span>
           <span class="badge ${DIFF_CLS[diff]}">${DIFF_LBL[diff]}</span>
-          <span class="badge" style="background:#FAEEDA;color:#633806">${REP_MAP[diff]} Rep</span>
+          <span class="badge" style="background:#FAEEDA;color:#633806">${calcQuestRep(q)} Rep</span>
           ${(()=>{const c=msCount(q);return !q.done&&c.total?`<span class="badge" style="background:var(--bg-p);color:var(--tx-s);border:0.5px solid var(--bd-t)">${c.done}/${c.total}</span>`:'';})()}
           ${q.subquests&&q.subquests.length?'<span class="umbrella-badge">UMBRELLA</span>':''}
           ${chainBadge}${smartBadge}
@@ -1297,7 +1474,7 @@ function questCard(q){
           ${q.qmId?(()=>{const qm=questmasters.find(x=>x.id===q.qmId);return qm?`<span class="qc-tag" style="background:var(--acc-l);color:var(--acc-d);border-color:var(--acc-m)">${qm.emoji||'·'} ${qm.name}</span>`:'';})():''}
         </div>
       </div>
-      <button class="qc-edit" onclick="event.stopPropagation();openQEdit('${q.id}')" title="Reclassify"><i class="ti ti-pencil"></i></button>
+      <button class="qc-edit" onclick="event.stopPropagation();openQEdit('${q.id}')" title="Edit quest"><i class="ti ti-pencil"></i></button>
       <i class="ti ti-chevron-right qc-chevron${q.expanded?' open':''}"></i>
     </div>
     ${!q.done?`<div style="display:flex;align-items:center;gap:6px;padding:0 12px 8px">
@@ -1388,7 +1565,7 @@ function toggleQuestCard(id){
 }
 
 function handleQuestComplete(quest){
-  const diff=quest.diff||'m';const repEarned=REP_MAP[diff];
+  const diff=quest.diff||'m';const repEarned=calcQuestRep(quest);
   totalRepBank+=repEarned;
   repLog.push({note:'Quest done: '+quest.name,amt:repEarned,ts:Date.now()});
   sbSet('repbank',totalRepBank);saveRewards();
@@ -1410,8 +1587,7 @@ function toggleQuest(id,checked){
     handleQuestComplete(q);
   } else if(!checked&&wasDone){
     /* Reverse the rep */
-    const diff=q.diff||'m';
-    const repEarned=REP_MAP[diff];
+    const repEarned=calcQuestRep(q);
     totalRepBank=Math.max(0,totalRepBank-repEarned);
     repLog.push({note:'Quest uncompleted: '+q.name,amt:-repEarned,ts:Date.now()});
     sbSet('repbank',totalRepBank);saveRewards();
@@ -1425,15 +1601,57 @@ function deleteQuest(id){['p','i','d','s'].forEach(c=>{quests[c]=quests[c].filte
 function saveQuests(){sbSet('quests',quests);scheduleSave();}
 
 let qEditId=null;
+let qEditMode='simple';
+
+function qeEsc(s){return(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function qeMsRowHTML(val){
+  return `<div class="qe-ms-row"><input type="text" class="qe-ms-input" value="${qeEsc(val)}" placeholder="Milestone"><button type="button" class="qe-row-x" onclick="this.parentElement.remove()" title="Remove">×</button></div>`;
+}
+function qeSubqBlockHTML(sq){
+  const ms=(sq.milestones||[]).map(m=>qeMsRowHTML(m)).join('');
+  return `<div class="qe-subq-block"><div class="qe-subq-hd"><input type="text" class="qe-subq-name" value="${qeEsc(sq.name)}" placeholder="Subquest name"><button type="button" class="qe-row-x" onclick="this.closest('.qe-subq-block').remove()" title="Remove subquest">×</button></div><div class="qe-subq-ms">${ms}</div><button type="button" class="qe-add-btn" onclick="qeAddMilestoneTo(this)">+ Add milestone</button></div>`;
+}
+function qeSyncAddButtons(){g('qedit-add-ms').style.display=qEditMode==='simple'?'block':'none';}
+function renderQEditStructure(q){
+  const box=g('qedit-structure');
+  if(q.subquests&&q.subquests.length){
+    qEditMode='umbrella';
+    box.innerHTML=q.subquests.map(sq=>qeSubqBlockHTML(sq)).join('');
+  } else {
+    qEditMode='simple';
+    box.innerHTML=(q.milestones||[]).map(m=>qeMsRowHTML(m)).join('');
+  }
+  qeSyncAddButtons();
+}
+function qeAddMilestone(){g('qedit-structure').insertAdjacentHTML('beforeend',qeMsRowHTML(''));}
+function qeAddMilestoneTo(btn){btn.previousElementSibling.insertAdjacentHTML('beforeend',qeMsRowHTML(''));}
+function qeAddSubquest(){
+  const box=g('qedit-structure');
+  if(qEditMode==='simple'){
+    const existing=[...box.querySelectorAll('.qe-ms-row .qe-ms-input')].map(i=>i.value.trim()).filter(Boolean);
+    box.innerHTML=qeSubqBlockHTML({name:'Main',milestones:existing});
+    qEditMode='umbrella';qeSyncAddButtons();
+  }
+  box.insertAdjacentHTML('beforeend',qeSubqBlockHTML({name:'',milestones:['']}));
+}
+function qeDeleteQuest(){
+  if(!qEditId)return;
+  if(!confirm('Delete this quest? This cannot be undone.'))return;
+  deleteQuest(qEditId);closeQEdit();
+}
 function openQEdit(id){
   const q=findQ(id);if(!q)return;
   qEditId=id;
   let curCat='s';
   for(const c of['p','i','d','s'])if((quests[c]||[]).some(x=>x.id===id)){curCat=c;break;}
-  g('qedit-qname').textContent=q.name;
+  g('qedit-qname').textContent='Update any field, then save.';
+  g('qedit-name').value=q.name||'';
+  g('qedit-sub').value=q.sub||'';
   g('qedit-cat').value=curCat;
   g('qedit-diff').value=q.diff||'m';
   g('qedit-tags').value=(q.tags||[]).join(', ');
+  g('qedit-weeks').value=q.estimatedWeeks||'';
+  g('qedit-complexity').value=q.complexity||'';
   /* Build QM dropdown */
   const qmSel=g('qedit-qm');
   qmSel.innerHTML='<option value="">— unassigned —</option>'+
@@ -1451,6 +1669,7 @@ function openQEdit(id){
     incLbl.style.display=show?'block':'none';
     incIn.style.display=show?'block':'none';
   };
+  renderQEditStructure(q);
   g('qedit-overlay').classList.add('show');
 }
 function closeQEdit(){qEditId=null;g('qedit-overlay').classList.remove('show');}
@@ -1464,9 +1683,41 @@ function saveQEdit(){
   const newTags=g('qedit-tags').value.split(',').map(s=>s.trim().toLowerCase().replace(/^#/,'')).filter(Boolean).slice(0,8);
   const newQM=g('qedit-qm').value||null;
   const incVal=parseFloat(g('qedit-income').value);
+  const newName=g('qedit-name').value.trim();
+  const newSub=g('qedit-sub').value.trim();
+  const weeksVal=parseFloat(g('qedit-weeks').value);
+  const compVal=parseInt(g('qedit-complexity').value);
+  if(newName)q.name=newName;
+  q.sub=newSub;
   q.diff=newDiff;q.tags=newTags;q.cat=newCat;q.qmId=newQM;
   if(newCat==='i'&&!isNaN(incVal)&&incVal>0)q.income=incVal;
   else if(newCat!=='i')delete q.income;
+  if(!isNaN(weeksVal)&&weeksVal>0)q.estimatedWeeks=weeksVal;else delete q.estimatedWeeks;
+  if(!isNaN(compVal)&&compVal>0)q.complexity=Math.min(10,compVal);else delete q.complexity;
+  /* Read milestone/subquest structure back out of the editor */
+  const box=g('qedit-structure');
+  if(qEditMode==='umbrella'){
+    const blocks=[...box.querySelectorAll('.qe-subq-block')];
+    const newSubquests=blocks.map(b=>({
+      name:b.querySelector('.qe-subq-name').value.trim()||'Subquest',
+      milestones:[...b.querySelectorAll('.qe-ms-input')].map(i=>i.value.trim()).filter(Boolean)
+    })).filter(sq=>sq.milestones.length||blocks.length===1);
+    if(newSubquests.length){
+      q.subquests=newSubquests.map((nsq,si)=>{
+        const old=(q.subquests&&q.subquests[si])||{};
+        const tickedMs=(old.tickedMs||[]).filter(i=>i<nsq.milestones.length);
+        return{name:nsq.name,done:!!old.done&&tickedMs.length===nsq.milestones.length,tickedMs,milestones:nsq.milestones};
+      });
+      q.milestones=[];q.tickedMs=[];
+    } else {
+      q.subquests=[];q.milestones=[];q.tickedMs=[];
+    }
+  } else {
+    const newMilestones=[...box.querySelectorAll('.qe-ms-input')].map(i=>i.value.trim()).filter(Boolean);
+    q.milestones=newMilestones;
+    q.tickedMs=(q.tickedMs||[]).filter(i=>i<newMilestones.length);
+    q.subquests=[];
+  }
   if(newCat!==curCat){
     quests[curCat]=quests[curCat].filter(x=>x.id!==qEditId);
     quests[newCat]=quests[newCat]||[];
@@ -1482,7 +1733,7 @@ function allQuests(){return[...quests.p,...quests.i,...quests.d,...quests.s];}
 function qmStats(qmId){
   const qs=allQuests().filter(q=>q.qmId===qmId);
   const done=qs.filter(q=>q.done);
-  const rep=done.reduce((a,q)=>a+(REP_MAP[q.diff||'m']||0),0);
+  const rep=done.reduce((a,q)=>a+calcQuestRep(q),0);
   const income=done.reduce((a,q)=>a+(parseFloat(q.income)||0),0);
   return{assigned:qs.length,completed:done.length,rep,income,rate:qs.length?Math.round(done.length/qs.length*100):0,quests:qs};
 }
@@ -1550,7 +1801,7 @@ async function makeQuestSmart(id){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,
         system:'You make personal development quests SMART. Detect long-term/complex goals and decompose them. Return ONLY valid JSON, no markdown, no backticks.',
-        messages:[{role:'user',content:`Quest: "${quest.name}" Category: ${CAT_LBL[quest.cat||qTab]}\n\nMake this SMART. First decide: is this a LONG-TERM or COMPLEX goal (months+ effort, multiple distinct skill/work streams)?\n\nIF YES — return UMBRELLA structure:\n{"name":"clearer main quest name","sub":"one sentence — what done looks like","umbrella":true,"subquests":[{"name":"subquest name","milestones":["one achievement","another achievement","another achievement"]}]}\nRules: 3-5 subquests covering distinct phases or workstreams. Each subquest has 3-4 milestones. Final subquest = race day / execution / proving it.\n\nIF NO (single-thread goal, weeks-months) — return SIMPLE structure:\n{"name":"clearer name","sub":"one sentence measurable objective","umbrella":false,"milestones":["step 1","step 2","step 3","step 4"]}\nRules: 3-5 concrete sequential milestones.\n\nCRITICAL for ALL milestones: each = EXACTLY ONE achievement. Never bundle objectives with "and" or commas. Split bundled steps into separate milestones. No generic filler.\n\nExample umbrella for "Run a 3:30 marathon":\nsubquests: [Build aerobic base, Improve endurance, Increase threshold, Prepare for race day]\nWith milestones like: ["Run 10k continuously","Complete first 15k run","Reach 30k long run","Complete a half marathon"]`}]})
+        messages:[{role:'user',content:`Quest: "${quest.name}" Category: ${CAT_LBL[quest.cat||qTab]}\n\nMake this SMART. First decide: is this a LONG-TERM or COMPLEX goal (months+ effort, multiple distinct skill/work streams)?\n\nIF YES — return UMBRELLA structure:\n{"name":"clearer main quest name","sub":"one sentence — what done looks like","umbrella":true,"subquests":[{"name":"subquest name","milestones":["one achievement","another achievement","another achievement"]}],"estimatedWeeks":<number, realistic total weeks to complete>,"complexity":<number 1-10, how demanding/skilled the objective is>}\nRules: 3-5 subquests covering distinct phases or workstreams. Each subquest has 3-4 milestones. Final subquest = race day / execution / proving it.\n\nIF NO (single-thread goal, weeks-months) — return SIMPLE structure:\n{"name":"clearer name","sub":"one sentence measurable objective","umbrella":false,"milestones":["step 1","step 2","step 3","step 4"],"estimatedWeeks":<number, realistic total weeks to complete>,"complexity":<number 1-10, how demanding/skilled the objective is>}\nRules: 3-5 concrete sequential milestones.\n\nCRITICAL for ALL milestones: each = EXACTLY ONE achievement. Never bundle objectives with "and" or commas. Split bundled steps into separate milestones. No generic filler.\n\nestimatedWeeks and complexity drive the Rep reward — be honest, not inflated.\n\nExample umbrella for "Run a 3:30 marathon":\nsubquests: [Build aerobic base, Improve endurance, Increase threshold, Prepare for race day]\nWith milestones like: ["Run 10k continuously","Complete first 15k run","Reach 30k long run","Complete a half marathon"]`}]})
     });
     if(resp.ok){
       const data=await resp.json();
@@ -1564,6 +1815,8 @@ async function makeQuestSmart(id){
         quest.milestones=splitMilestones(parsed.milestones||quest.milestones);quest.tickedMs=[];
         quest.subquests=[];
       }
+      if(typeof parsed.estimatedWeeks==='number'&&parsed.estimatedWeeks>0)quest.estimatedWeeks=parsed.estimatedWeeks;
+      if(typeof parsed.complexity==='number'&&parsed.complexity>0)quest.complexity=Math.min(10,parsed.complexity);
       quest.smart=true;
     }
   }catch(e){}
@@ -1588,7 +1841,7 @@ async function addQuest(){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:700,
         system:'You classify and make personal development quests SMART. Return ONLY valid JSON, no markdown.',
-        messages:[{role:'user',content:`Quest: "${name}"\nUser selected category: ${CAT_LBL[hintCat]}, difficulty: ${DIFF_LBL[hintDiff]}\n\nClassify, then decide structure. Is this LONG-TERM/COMPLEX (months+, multiple workstreams)?\n\nIF YES — umbrella:\n{"name":"clearer name","sub":"one sentence — what done looks like","cat":"p"|"i"|"d"|"s","diff":"e"|"m"|"h","umbrella":true,"subquests":[{"name":"subquest","milestones":["one achievement","another"]}]}\n3-5 subquests, each with 3-4 atomic milestones. Final subquest = execution/proving it.\n\nIF NO — simple:\n{"name":"clearer name","sub":"one sentence","cat":"...","diff":"...","umbrella":false,"milestones":["step 1","step 2","step 3","step 4"]}\n\ncat: p=physical/fitness/health, i=income/money/career/business, d=discipline/habits/productivity/mindset, s=experience/adventure/creative/social. Override user if wrong. diff: e=days-weeks, m=weeks-months, h=months+.\n\nCRITICAL: every milestone = ONE achievement. Never combine with "and" or commas. Split bundled steps. No generic filler.`}]})
+        messages:[{role:'user',content:`Quest: "${name}"\nUser selected category: ${CAT_LBL[hintCat]}, difficulty: ${DIFF_LBL[hintDiff]}\n\nClassify, then decide structure. Is this LONG-TERM/COMPLEX (months+, multiple workstreams)?\n\nIF YES — umbrella:\n{"name":"clearer name","sub":"one sentence — what done looks like","cat":"p"|"i"|"d"|"s","diff":"e"|"m"|"h","umbrella":true,"subquests":[{"name":"subquest","milestones":["one achievement","another"]}],"estimatedWeeks":<number, realistic total weeks to complete>,"complexity":<number 1-10>}\n3-5 subquests, each with 3-4 atomic milestones. Final subquest = execution/proving it.\n\nIF NO — simple:\n{"name":"clearer name","sub":"one sentence","cat":"...","diff":"...","umbrella":false,"milestones":["step 1","step 2","step 3","step 4"],"estimatedWeeks":<number, realistic total weeks to complete>,"complexity":<number 1-10>}\n\ncat: p=physical/fitness/health, i=income/money/career/business, d=discipline/habits/productivity/mindset, s=experience/adventure/creative/social. Override user if wrong. diff: e=days-weeks, m=weeks-months, h=months+.\n\nCRITICAL: every milestone = ONE achievement. Never combine with "and" or commas. Split bundled steps. No generic filler.\n\nestimatedWeeks and complexity drive the Rep reward — be honest, not inflated.`}]})
     });
     if(resp.ok){
       const data=await resp.json();
@@ -1609,6 +1862,8 @@ async function addQuest(){
         newQ.milestones=splitMilestones(parsed.milestones||[]);
         newQ.subquests=[];
       }
+      if(typeof parsed.estimatedWeeks==='number'&&parsed.estimatedWeeks>0)newQ.estimatedWeeks=parsed.estimatedWeeks;
+      if(typeof parsed.complexity==='number'&&parsed.complexity>0)newQ.complexity=Math.min(10,parsed.complexity);
       newQ.tickedMs=[];newQ.smart=true;newQ.generating=false;
       quests[newCat].push(newQ);
       /* Switch to correct tab if category changed */
@@ -1636,7 +1891,7 @@ async function generateSideQuestSuggestions(){
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,
         system:'You suggest side quests for a personal development app. Return ONLY a valid JSON array. No markdown, no backticks.',
-        messages:[{role:'user',content:`The user wants: "${input}"\nAlready added: ${existing.slice(0,8).join(', ')||'none'}\nSuggest 3 side quests. Return JSON array: [{"name":"quest name","sub":"one sentence why worth doing","diff":"e"|"m"|"h","milestones":["step 1","step 2","step 3"]}]\nMake them specific and interesting, directly related to what they asked. Each should feel like a genuine adventure or challenge. CRITICAL: each milestone = ONE achievement only — never bundle with "and" or commas.`}]})
+        messages:[{role:'user',content:`The user wants: "${input}"\nAlready added: ${existing.slice(0,8).join(', ')||'none'}\nSuggest 3 side quests. Return JSON array: [{"name":"quest name","sub":"one sentence why worth doing","diff":"e"|"m"|"h","milestones":["step 1","step 2","step 3"],"estimatedWeeks":<number, realistic total weeks to complete>,"complexity":<number 1-10>}]\nMake them specific and interesting, directly related to what they asked. Each should feel like a genuine adventure or challenge. CRITICAL: each milestone = ONE achievement only — never bundle with "and" or commas. estimatedWeeks/complexity drive the Rep reward — be honest, not inflated.`}]})
     });
     if(!resp.ok)throw new Error('API error');
     const data=await resp.json();
@@ -1653,13 +1908,37 @@ async function generateSideQuestSuggestions(){
 }
 
 function addAISideQuest(sug){
-  quests.s.push({id:'qs'+Date.now(),name:sug.name,sub:sug.sub,diff:sug.diff||'m',done:false,milestones:splitMilestones(sug.milestones||[]),tickedMs:[],expanded:true,generating:false,smart:true});
+  quests.s.push({id:'qs'+Date.now(),name:sug.name,sub:sug.sub,diff:sug.diff||'m',done:false,milestones:splitMilestones(sug.milestones||[]),tickedMs:[],expanded:true,generating:false,smart:true,estimatedWeeks:(typeof sug.estimatedWeeks==='number'&&sug.estimatedWeeks>0)?sug.estimatedWeeks:undefined,complexity:(typeof sug.complexity==='number'&&sug.complexity>0)?Math.min(10,sug.complexity):undefined});
   g('sq-ai-box').className='sq-ai-box';g('sq-ai-input').value='';
   saveQuests();renderAll();showCel('Side quest added.','cel-rep');
 }
 
 /* ===== LEVELS ===== */
+function renderProfile(streak){
+  const lv=getLv(streak);
+  g('pf-avatar').textContent=userProfile.avatar||'🧑';
+  g('pf-name').textContent=userProfile.name||'Operator';
+  g('pf-lv-sub').textContent='Level '+lv.lv+' — '+lv.name;
+  g('pf-xp').textContent=lifetimeXP();
+  g('pf-rep').textContent=totalRepBank;
+  g('pf-p').textContent=lifetimeStatXP('p');
+  g('pf-i').textContent=lifetimeStatXP('i');
+  g('pf-d').textContent=lifetimeStatXP('d');
+  g('pf-streak').textContent=streak;
+}
+function openPEdit(){
+  g('pedit-avatar').value=userProfile.avatar||'🧑';
+  g('pedit-name').value=userProfile.name||'Operator';
+  g('pedit-overlay').classList.add('show');
+}
+function closePEdit(){g('pedit-overlay').classList.remove('show');}
+function savePEdit(){
+  userProfile={avatar:g('pedit-avatar').value.trim()||'🧑',name:g('pedit-name').value.trim()||'Operator'};
+  sbSet('profile',userProfile);
+  closePEdit();renderAll();
+}
 function renderLevels(streak){
+  renderProfile(streak);
   const lv=getLv(streak);const next=getNextLv(streak);
   g('lv-num-big').textContent=lv.lv;g('lv-title-big').textContent='Level '+lv.lv+' — '+lv.name;
   g('lv-streak-sub').textContent=streak+' perfect day streak';
@@ -1781,6 +2060,38 @@ function toggleO(id,checked,e){const tk=dk(tod());let c=getOC(tk);c=checked?[...
 function toggleP(id,checked){const tk=dk(tod());let c=getPC(tk);c=checked?[...new Set([...c,id])]:c.filter(x=>x!==id);penComp[tk]=c;updateRepBank();scheduleSave();renderAll();}
 function toggleOpt(){optOpen=!optOpen;g('opt-list').style.display=optOpen?'block':'none';g('opt-chev').style.transform=optOpen?'rotate(90deg)':'';}
 function deleteHabit(id,type){if(type==='core'){core=core.filter(h=>h.id!==id);}else if(type==='opt'){opt=opt.filter(h=>h.id!==id);}else{pen=pen.filter(h=>h.id!==id);}scheduleSave();renderAll();}
+
+/* ===== HABIT EDIT MODAL ===== */
+let hEditId=null,hEditType=null;
+function habitArr(type){return type==='core'?core:type==='opt'?opt:pen;}
+function openHEdit(id,type){
+  const h=habitArr(type).find(x=>x.id===id);if(!h)return;
+  hEditId=id;hEditType=type;
+  g('hedit-sub').textContent=type==='pen'?'Penalties use a negative XP value.':'Update any field, then save.';
+  g('hedit-name').value=h.name||'';
+  g('hedit-xp-lbl').textContent=type==='pen'?'XP penalty':'XP value';
+  g('hedit-xp').value=h.xp;
+  g('hedit-stat').value=h.stat||'d';
+  g('hedit-overlay').classList.add('show');
+}
+function closeHEdit(){hEditId=null;hEditType=null;g('hedit-overlay').classList.remove('show');}
+function saveHEdit(){
+  if(!hEditId)return;
+  const h=habitArr(hEditType).find(x=>x.id===hEditId);if(!h){closeHEdit();return;}
+  const newName=g('hedit-name').value.trim();
+  const newXp=parseInt(g('hedit-xp').value);
+  const newStat=g('hedit-stat').value;
+  if(newName)h.name=newName;
+  if(!isNaN(newXp))h.xp=newXp;
+  h.stat=newStat;
+  scheduleSave();closeHEdit();renderAll();
+}
+function hEditDelete(){
+  if(!hEditId)return;
+  if(!confirm('Delete this habit? This cannot be undone.'))return;
+  deleteHabit(hEditId,hEditType);
+  closeHEdit();
+}
 
 /* ===== TOAST ===== */
 let celT=null;
