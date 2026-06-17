@@ -115,6 +115,7 @@ button{cursor:pointer}
 .td{background:#EDE9FE;color:#4C1D95}
 .xpb{font-size:11px;color:var(--tx-s);white-space:nowrap;min-width:34px;text-align:right}
 .quest-link{font-size:10px;color:var(--acc-d);background:var(--acc-l);padding:1px 6px;border-radius:99px;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.freq-tag{font-size:10px;color:#0D7A5F;background:#D8F3E8;padding:1px 6px;border-radius:99px;white-space:nowrap;flex-shrink:0}
 .pen-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--bd-t)}
 .pen-row:last-child{border-bottom:none}
 .plbl{flex:1;font-size:13px}
@@ -129,6 +130,7 @@ button{cursor:pointer}
 .wd .dn{font-size:10px;color:var(--tx-s)}
 .overflow-card{background:#FAEEDA;border:0.5px solid #FAC775;border-radius:var(--r-md);padding:.65rem .9rem;margin-top:8px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .overflow-card.hidden{display:none}
+.hidden{display:none}
 .xp-pop{position:fixed;pointer-events:none;font-size:13px;font-weight:700;color:var(--acc);z-index:9999;animation:xpRise 1.2s ease forwards}
 @keyframes xpRise{0%{opacity:1;transform:translate(-50%,-100%)}100%{opacity:0;transform:translate(-50%,calc(-100% - 40px))}}
 
@@ -231,26 +233,37 @@ button{cursor:pointer}
 .rgc-num{font-size:18px;font-weight:700;color:#BA7517}
 .rgc-lbl{font-size:11px;color:var(--tx-s);margin-top:2px}
 .rtier-lbl{font-size:11px;font-weight:600;color:var(--tx-s);letter-spacing:.06em;text-transform:uppercase;margin:4px 0 8px;padding-bottom:4px;border-bottom:0.5px solid var(--bd-t)}
+.reward-featured{position:relative;border-radius:var(--r-lg);padding:1.1rem;margin-bottom:14px;overflow:hidden;display:flex;flex-direction:column;gap:4px;box-shadow:0 6px 20px rgba(40,10,60,0.35);background:linear-gradient(155deg,#2B1E54 0%,#7B2D8E 55%,#E0682B 100%)}
+.reward-featured::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 78% 0%,rgba(255,255,255,0.22),transparent 60%);pointer-events:none}
+.rf-tag{position:relative;z-index:1;align-self:flex-start;font-size:10px;font-weight:700;letter-spacing:.05em;color:#3B2A6B;background:#fff;padding:3px 9px;border-radius:99px;text-transform:uppercase;margin-bottom:4px}
+.rf-emoji{position:relative;z-index:1;font-size:46px;line-height:1;margin:2px 0}
+.rf-name{position:relative;z-index:1;font-size:16px;font-weight:700;color:#fff;line-height:1.3}
+.rf-row{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.rf-cost{font-size:13px;font-weight:700;color:#fff;background:rgba(255,255,255,0.18);padding:5px 11px;border-radius:99px}
 .reward-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px}
-.reward-card{background:var(--bg-s);border:0.5px solid var(--bd-t);border-radius:var(--r-lg);padding:.9rem;display:flex;flex-direction:column;gap:6px;transition:all .2s;position:relative;overflow:hidden}
-.reward-card.can-afford{border-color:color-mix(in srgb,var(--acc) 40%,transparent);background:color-mix(in srgb,var(--acc) 4%,var(--bg-s))}
-.reward-card.claimed-one{opacity:.55;border-style:dashed}
-.rc-tier-bar{position:absolute;top:0;left:0;right:0;height:3px}
+.reward-card{position:relative;border-radius:var(--r-lg);padding:.9rem;display:flex;flex-direction:column;gap:6px;transition:transform .15s,box-shadow .15s;overflow:hidden;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.2)}
+.reward-card:hover{transform:translateY(-2px)}
+.reward-card.rc-t1{background:linear-gradient(160deg,#3B7CF0,#1A3F99)}
+.reward-card.rc-t2{background:linear-gradient(160deg,#A346E0,#6420A8)}
+.reward-card.rc-t3{background:linear-gradient(160deg,#F2A93B,#D9622B)}
+.reward-card.claimed-one{opacity:.5;filter:grayscale(.35)}
+.reward-card.can-afford{box-shadow:0 0 0 2px rgba(255,255,255,0.55),0 3px 10px rgba(0,0,0,0.2)}
+.rc-new{position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;letter-spacing:.04em;color:#3B2A6B;background:#fff;padding:2px 7px;border-radius:99px;z-index:1}
 .rc-emoji{font-size:26px;margin-bottom:2px;display:block;line-height:1}
-.rc-name{font-size:13px;font-weight:500;line-height:1.3;flex:1}
-.rc-name.claimed{text-decoration:line-through;color:var(--tx-s)}
-.rc-cost{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
-.rc-pill{font-size:12px;font-weight:700;padding:3px 8px;border-radius:99px}
-.rc-1{background:#FAEEDA;color:#633806}
-.rc-2{background:#DBEAFE;color:#1E40AF}
-.rc-3{background:var(--acc-l);color:var(--acc-dp)}
-.btn-buy{background:none;border:0.5px solid var(--bd-s);border-radius:var(--r-md);padding:4px 10px;font-size:12px;cursor:pointer;color:var(--tx-p);white-space:nowrap;font-weight:500}
-.btn-buy:hover{background:var(--bg-p)}
-.btn-buy:disabled{opacity:.35;cursor:not-allowed}
-.btn-buy.can-claim{background:var(--acc);border-color:var(--acc);color:#fff}
+.rc-name{font-size:13px;font-weight:600;line-height:1.3;flex:1;color:#fff}
+.rc-name.claimed{text-decoration:line-through;color:rgba(255,255,255,0.7)}
+.rc-cost{display:flex;align-items:center;justify-content:space-between;margin-top:auto;gap:6px}
+.rc-pill{font-size:12px;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,0.22);color:#fff;white-space:nowrap}
+.btn-buy{background:rgba(255,255,255,0.92);border:none;border-radius:var(--r-md);padding:4px 10px;font-size:12px;cursor:pointer;color:#222;white-space:nowrap;font-weight:700}
+.btn-buy:hover{background:#fff}
+.btn-buy:disabled{opacity:.4;cursor:not-allowed;background:rgba(255,255,255,0.4)}
+.btn-buy.can-claim{background:#fff;color:#1A1A1A}
 .btn-buy.can-claim:hover{opacity:.9}
-.btn-buy.owned{background:#EAF3DE;border-color:#97C459;color:#27500A}
-.rep-tag{font-size:10px;padding:1px 5px;border-radius:99px;background:var(--acc-l);color:var(--acc-d)}
+.btn-buy.owned{background:rgba(255,255,255,0.85);color:#1A6B2E}
+.rep-tag{font-size:10px;padding:1px 5px;border-radius:99px;background:rgba(255,255,255,0.22);color:#fff}
+.rc-del{position:absolute;top:6px;right:6px;z-index:1}
+.reward-card .del-btn{color:rgba(255,255,255,0.8)}
+.reward-card .del-wrap circle.trk{stroke:rgba(255,255,255,0.35)}
 .log-row{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:0.5px solid var(--bd-t)}
 .log-row:last-child{border-bottom:none}
 .log-body{flex:1;font-size:13px}
@@ -454,6 +467,10 @@ button{cursor:pointer}
           <option value="d">Discipline</option>
         </select>
       </div>
+    </div>
+    <div id="hedit-freq-row" class="hidden">
+      <label class="qedit-lbl">Weekly target (blank = every day)</label>
+      <input id="hedit-freq" type="number" step="1" min="1" max="6" placeholder="e.g. 4">
     </div>
     <button type="button" class="qedit-danger" onclick="hEditDelete()">Delete habit</button>
     <div class="qedit-actions">
@@ -676,6 +693,7 @@ button{cursor:pointer}
   </div>
   <div class="card">
     <div class="row-hd"><div class="ttl">Reward store</div><span class="sub" id="store-sub"></span></div>
+    <div id="reward-featured"></div>
     <div id="reward-list"></div>
     <div class="del-hint"><i class="ti ti-hand-stop" style="font-size:12px"></i> Hold ✕ 2 s to remove</div>
     <div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--bd-t)">
@@ -755,13 +773,13 @@ const HOLD_MS=2000,CIRC=69,OVERFLOW_RATE=10,DEFAULT_PW='operator';
 
 const LEVELS=[
   {lv:1,req:0,name:'Baseline',unlocks:['Core 7 habits active','XP tracking live','Day streak starts']},
-  {lv:2,req:3,name:'Locked in',unlocks:['Weekly scores visible','Quest board active','Rep store unlocked']},
-  {lv:3,req:7,name:'Operator',unlocks:['Overflow XP → Rep active','Optional habit Rep unlocked','Streak milestone bonuses']},
-  {lv:4,req:14,name:'Builder',unlocks:['Second deep work block','Income target increases','Weekly review prompts']},
-  {lv:5,req:21,name:'Accelerator',unlocks:['Physique XP +10%','Monthly streak bonus +50 XP','Chain quest unlock notifications']},
-  {lv:6,req:30,name:'System',unlocks:['Penalties doubled','Post-work phone ban enforced','Full analytics view']},
-  {lv:7,req:42,name:'Elite operator',unlocks:['Weekend discipline tracking','1 grace day per month','Custom XP multipliers']},
-  {lv:8,req:60,name:'Sovereign',unlocks:['All systems active','No social before 18:00','Operator identity locked in']},
+  {lv:2,req:2,name:'Locked in',unlocks:['Weekly scores visible','Quest board active','Rep store unlocked']},
+  {lv:3,req:4,name:'Operator',unlocks:['Overflow XP → Rep active','Optional habit Rep unlocked','Streak milestone bonuses']},
+  {lv:4,req:7,name:'Builder',unlocks:['Second deep work block','Income target increases','Weekly review prompts']},
+  {lv:5,req:11,name:'Accelerator',unlocks:['Physique XP +10%','Monthly streak bonus +50 XP','Chain quest unlock notifications']},
+  {lv:6,req:16,name:'System',unlocks:['Penalties doubled','Post-work phone ban enforced','Full analytics view']},
+  {lv:7,req:22,name:'Elite operator',unlocks:['Weekend discipline tracking','1 grace day per month','Custom XP multipliers']},
+  {lv:8,req:30,name:'Sovereign',unlocks:['All systems active','No social before 18:00','Operator identity locked in']},
 ];
 
 const THEMES=[
@@ -882,8 +900,8 @@ const QUEST_CHAINS={
     [{name:'Complete a full week perfectly',sub:'All core habits 7 days straight',diff:'m',milestones:['Day 3 complete','Day 5 complete','Day 7 — full week done']},
      {name:'14-day perfect streak',sub:'Two weeks unbroken',diff:'m',milestones:['7-day streak achieved','Day 10 clean','14 days done']},
      {name:'30-day perfect streak',sub:'A month without breaking',diff:'h',milestones:['14-day streak done','Day 21 clean','30 days completed']},
-     {name:'Reach Level 5',sub:'21-day streak milestone',diff:'h',milestones:['Level 2 reached','Level 3 reached','Level 4 reached','Level 5 — Accelerator']},
-     {name:'Reach Level 8 — Sovereign',sub:'60-day perfect streak',diff:'h',milestones:['Level 5 reached','Level 6 reached','Level 7 reached','Level 8 — Sovereign']},
+     {name:'Reach Level 5',sub:'11-day streak milestone',diff:'h',milestones:['Level 2 reached','Level 3 reached','Level 4 reached','Level 5 — Accelerator']},
+     {name:'Reach Level 8 — Sovereign',sub:'30-day perfect streak',diff:'h',milestones:['Level 5 reached','Level 6 reached','Level 7 reached','Level 8 — Sovereign']},
     ],
     [{name:'30-day phone-free morning streak',sub:'60 min no phone every morning',diff:'h',milestones:['7 consecutive mornings','14 mornings clean','30 mornings done']},
      {name:'60-day phone-free morning streak',sub:'Two months owning the morning',diff:'h',milestones:['30-day streak achieved','45 mornings','60 mornings done']},
@@ -901,7 +919,7 @@ const QUEST_CHAINS={
 const CORE_DEF=[
   {id:'h1',name:'No phone for first 60 min',xp:20,stat:'d'},
   {id:'h2',name:'Morning execution block (1h)',xp:20,stat:'d'},
-  {id:'h3',name:'Gym session completed',xp:40,stat:'p'},
+  {id:'h3',name:'Gym session completed',xp:40,stat:'p',freq:4},
   {id:'h4',name:'200g protein hit',xp:25,stat:'p'},
   {id:'h5',name:'1h deep work block',xp:30,stat:'i'},
   {id:'h6',name:'Phone under 90 min total',xp:30,stat:'d'},
@@ -957,8 +975,13 @@ const CAT_LBL={p:'Physique',i:'Income',d:'Discipline',s:'Side quest'};
 const BCAT={p:'bq-p',i:'bq-i',d:'bq-d',s:'bq-s'};
 const DIFF_CLS={e:'diff-e',m:'diff-m',h:'diff-h'};
 const TIER_NAMES={1:'Tier 1 — daily treats',2:'Tier 2 — weekly treats',3:'Tier 3 — big rewards'};
-const TIER_BAR={1:'#EF9F27',2:'#378ADD',3:'var(--acc)'};
-const TIER_COL={1:'rc-1',2:'rc-2',3:'rc-3'};
+const TIER_CLASS={1:'rc-t1',2:'rc-t2',3:'rc-t3'};
+function isNewReward(r){return typeof r.addedAt==='number'&&(Date.now()-r.addedAt<7*24*3600*1000);}
+function featuredReward(){
+  const live=rewards.filter(r=>!(r.claimed&&!r.repeatable));
+  if(!live.length)return null;
+  return live.reduce((best,r)=>r.cost>best.cost?r:best,live[0]);
+}
 const STAT_TAGS={p:'<span class="tag tp">Physique</span>',i:'<span class="tag tic">Income</span>',d:'<span class="tag td">Discipline</span>'};
 const PROG_COL={p:'#1D9E75',i:'#2563EB',d:'var(--acc)',s:'#EF9F27'};
 const ICON_MAP={p:'ti-barbell',i:'ti-briefcase',d:'ti-brain',s:'ti-sparkles'};
@@ -1194,7 +1217,11 @@ function getOC(k){const v=optComp[k];return Array.isArray(v)?v:[];}
 function getPC(k){const v=penComp[k];return Array.isArray(v)?v:[];}
 function coreXP(key){const c=getC(key),pc=getPC(key);return core.filter(h=>c.includes(h.id)).reduce((a,h)=>a+h.xp,0)+pen.filter(h=>pc.includes(h.id)).reduce((a,h)=>a+h.xp,0);}
 function optXP(key){return opt.filter(h=>getOC(key).includes(h.id)).reduce((a,h)=>a+h.xp,0);}
-function maxCoreXP(){return core.reduce((a,h)=>a+h.xp,0)}
+/* Habits with freq<7 are weekly-target (e.g. gym 4×/week) — not required every day for a perfect day */
+function isWeeklyHabit(h){return typeof h.freq==='number'&&h.freq>0&&h.freq<7;}
+function maxCoreXP(){return core.filter(h=>!isWeeklyHabit(h)).reduce((a,h)=>a+h.xp,0)}
+function weekDayKeys(){const t=tod();const mon=getMonday(t);const arr=[];for(let i=0;i<7;i++){const d=new Date(mon);d.setDate(mon.getDate()+i);if(d>t)break;arr.push(dk(d));}return arr;}
+function weeklyDoneCount(h){return weekDayKeys().filter(k=>getC(k).includes(h.id)).length;}
 function dayPct(key){const m=maxCoreXP();return m?Math.min(100,Math.round(Math.max(0,coreXP(key))/m*100)):0}
 function overflowXP(key){return dayPct(key)>=100?optXP(key):0}
 function overflowRep(key){return Math.floor(overflowXP(key)/OVERFLOW_RATE)}
@@ -1298,7 +1325,8 @@ function renderToday(tk,streak,perfStreak){
     const aq=activeQuestForStat(h.stat);
     const qLink=aq?`<span class="quest-link" onclick="setView('quests')" title="${aq.name}">${aq.name.length>16?aq.name.slice(0,16)+'…':aq.name}</span>`:'';
     const accentCol=h.stat==='p'?'#1D9E75':h.stat==='i'?'#2563EB':'var(--acc)';
-    row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:${accentCol};flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}${qLink}<span class="xpb">+${h.xp}</span><button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','core')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('hd_'+h.id)}`;
+    const freqTag=isWeeklyHabit(h)?`<span class="freq-tag">${weeklyDoneCount(h)}/${h.freq} this wk</span>`:'';
+    row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:${accentCol};flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}${freqTag}${qLink}<span class="xpb">+${h.xp}</span><button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','core')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('hd_'+h.id)}`;
     row.querySelector('input').addEventListener('change',e=>toggleH(h.id,e.target.checked,e));
     list.appendChild(row);attachHold('hd_'+h.id,()=>deleteHabit(h.id,'core'));
   });
@@ -1967,22 +1995,34 @@ function renderRep(bal){
   g('rep-week-v').textContent='+'+(weekRep+weekOvf+(perf>=5?25:0));
   g('rep-total-v').textContent=totalRepBank;g('rep-overflow-v').textContent='+'+allTimeOverflow();
   g('store-sub').textContent=bal+' Rep available';
+  const feat=featuredReward();
+  const featBox=g('reward-featured');
+  if(feat){
+    const canAffordFeat=bal>=feat.cost&&!feat.claimed;const featOwned=feat.claimed&&!feat.repeatable;
+    featBox.innerHTML=`<span class="rf-tag">${isNewReward(feat)?'New · Featured':'Featured'}</span>
+      <span class="rf-emoji">${feat.emoji||'🎁'}</span>
+      <div class="rf-name">${feat.name}${feat.repeatable?` <span class="rep-tag">repeatable</span>`:''}</div>
+      <div class="rf-row"><span class="rf-cost">🪙 ${feat.cost} Rep</span>
+      <button class="btn-buy${featOwned?' owned':canAffordFeat?' can-claim':''}" ${featOwned||!canAffordFeat?'disabled':''} onclick="buyReward('${feat.id}')">
+        ${featOwned?'✓ Owned':!canAffordFeat?'🔒 Locked':'Claim'}</button></div>`;
+    featBox.classList.remove('hidden');
+  } else {featBox.innerHTML='';featBox.classList.add('hidden');}
   const rlist=g('reward-list');rlist.innerHTML='';
   [1,2,3].forEach(tier=>{
-    const items=rewards.filter(r=>r.tier===tier);if(!items.length)return;
+    const items=rewards.filter(r=>r.tier===tier&&r.id!==feat?.id);if(!items.length)return;
     rlist.innerHTML+=`<div class="rtier-lbl">${TIER_NAMES[tier]}</div>`;
     const grid=document.createElement('div');grid.className='reward-grid';
     items.forEach(r=>{
       const canAfford=bal>=r.cost&&!r.claimed;const isOwnedForever=r.claimed&&!r.repeatable;
       const card=document.createElement('div');
-      card.className='reward-card'+(isOwnedForever?' claimed-one':canAfford?' can-afford':'');
-      card.innerHTML=`<div class="rc-tier-bar" style="background:${TIER_BAR[tier]}"></div>
+      card.className='reward-card '+TIER_CLASS[tier]+(isOwnedForever?' claimed-one':canAfford?' can-afford':'');
+      card.innerHTML=`${isNewReward(r)?'<span class="rc-new">NEW!</span>':''}
         <span class="rc-emoji">${r.emoji||'🎁'}</span>
         <div class="rc-name${isOwnedForever?' claimed':''}">${r.name}${r.repeatable?` <span class="rep-tag">repeatable</span>`:''}</div>
-        <div class="rc-cost"><span class="rc-pill ${TIER_COL[tier]}">${r.cost} Rep</span>
+        <div class="rc-cost"><span class="rc-pill">🪙 ${r.cost}</span>
         <button class="btn-buy${isOwnedForever?' owned':canAfford?' can-claim':''}" ${isOwnedForever||!canAfford?'disabled':''} onclick="buyReward('${r.id}')">
           ${isOwnedForever?'✓':!canAfford?'🔒':'Claim'}</button></div>
-        ${delBtn('rd_'+r.id)}`;
+        <div class="rc-del">${delBtn('rd_'+r.id)}</div>`;
       grid.appendChild(card);setTimeout(()=>attachHold('rd_'+r.id,()=>deleteReward(r.id)),0);
     });
     rlist.appendChild(grid);
@@ -2024,7 +2064,7 @@ function spawnConfetti(count,colors){
 function addReward(){
   const name=g('rw-name').value.trim();const cost=parseInt(g('rw-cost').value)||20;const tier=parseInt(g('rw-tier').value)||1;const rep=g('rw-rep').value==='1';
   if(!name)return;const emoji=guessEmoji(name,tier);
-  rewards.push({id:'r'+Date.now(),name,emoji,cost,tier,claimed:false,repeatable:rep});
+  rewards.push({id:'r'+Date.now(),name,emoji,cost,tier,claimed:false,repeatable:rep,addedAt:Date.now()});
   g('rw-name').value='';g('rw-cost').value='';saveRewards();renderAll();
 }
 function buyReward(id){
@@ -2072,6 +2112,9 @@ function openHEdit(id,type){
   g('hedit-xp-lbl').textContent=type==='pen'?'XP penalty':'XP value';
   g('hedit-xp').value=h.xp;
   g('hedit-stat').value=h.stat||'d';
+  const freqRow=g('hedit-freq-row');
+  if(type==='core'){freqRow.classList.remove('hidden');g('hedit-freq').value=isWeeklyHabit(h)?h.freq:'';}
+  else freqRow.classList.add('hidden');
   g('hedit-overlay').classList.add('show');
 }
 function closeHEdit(){hEditId=null;hEditType=null;g('hedit-overlay').classList.remove('show');}
@@ -2084,6 +2127,11 @@ function saveHEdit(){
   if(newName)h.name=newName;
   if(!isNaN(newXp))h.xp=newXp;
   h.stat=newStat;
+  if(hEditType==='core'){
+    const freqVal=parseInt(g('hedit-freq').value);
+    if(!isNaN(freqVal)&&freqVal>=1&&freqVal<=6)h.freq=freqVal;
+    else delete h.freq;
+  }
   scheduleSave();closeHEdit();renderAll();
 }
 function hEditDelete(){
