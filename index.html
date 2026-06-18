@@ -577,7 +577,6 @@ button{cursor:pointer}
       <input type="number" id="todo-xp" placeholder="XP" value="10" min="1" style="width:56px" onkeydown="if(event.key==='Enter')addTodo()">
       <button class="btn-sm btn-acc" onclick="addTodo()">+ Add</button>
     </div>
-    <div class="del-hint"><i class="ti ti-hand-stop" style="font-size:12px"></i> Hold ✕ 2 s to remove</div>
   </div>
   <div class="card" style="padding:0.75rem 1.25rem;margin-bottom:10px">
     <div class="opt-toggle" onclick="toggleMore()" style="margin-top:0"><i class="ti ti-chevron-right" id="more-chev" style="font-size:12px"></i> More <span style="font-size:11px;color:var(--tx-s);margin-left:4px">penalties · quest actions · week · rewards</span></div>
@@ -729,9 +728,12 @@ button{cursor:pointer}
   <div class="card">
     <div class="row-hd"><div class="ttl">History</div><span class="sub" id="log-count"></span></div>
     <div id="log-list"></div>
+    <div id="log-more-row" style="display:none;text-align:center;margin-top:6px">
+      <button class="btn-sm" onclick="toggleLogExpand()" id="log-more-btn">Show all</button>
+    </div>
     <div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--bd-t)">
-      <div style="font-size:13px;font-weight:600;margin-bottom:6px">Manual adjustment</div>
-      <div class="manual-row">
+      <div class="opt-toggle" onclick="toggleManualAdj()" style="margin-top:0"><i class="ti ti-chevron-right" id="manual-chev" style="font-size:12px"></i> Manual adjustment</div>
+      <div class="manual-row" id="manual-adj-row" style="display:none">
         <input type="number" id="manual-amt" placeholder="Rep" min="1" style="width:80px">
         <input type="text" id="manual-note" placeholder="Reason…" style="flex:1;min-width:80px">
         <button class="btn-sm" onclick="manualEarn()">+ Add</button>
@@ -1520,10 +1522,8 @@ function questCard(q){
         <div class="qc-name${q.done?' done':''}">${q.name}</div>
         ${q.sub?`<div class="qc-sub">${q.sub}</div>`:''}
         <div class="qc-badges">
-          <span class="badge ${BCAT[qTab]}">${CAT_LBL[qTab]}</span>
           <span class="badge ${DIFF_CLS[diff]}">${DIFF_LBL[diff]}</span>
           <span class="badge" style="background:#FAEEDA;color:#633806">${calcQuestRep(q)} Rep</span>
-          ${(()=>{const c=msCount(q);return !q.done&&c.total?`<span class="badge" style="background:var(--bg-p);color:var(--tx-s);border:0.5px solid var(--bd-t)">${c.done}/${c.total}</span>`:'';})()}
           ${chainBadge}
           ${q.done?'<span class="badge bdone">Done</span>':''}
           ${(q.tags&&q.tags.length)?q.tags.slice(0,3).map(t=>`<span class="qc-tag">#${t}</span>`).join(''):''}
@@ -2010,8 +2010,9 @@ function renderLevels(lvXP){
     const ul=lvXP>=l.req,isCur=lv.lv===l.lv;
     const state=isCur?'current':ul?'unlocked':'locked';
     const pillCls='lv-pill '+(isCur?'lp-cur':ul?'lp-done':'lp-lock');
-    const items=l.unlocks.map(u=>`<li>${ul?'✓ ':'🔒 '}${u}</li>`).join('');
-    tl.innerHTML+=`<div class="lv-row"><div class="lv-dot${isCur?' current':ul?' unlocked':''}"></div><div class="lv-block ${state}"><div class="lv-hd"><span class="lv-title">Level ${l.lv} — ${l.name}</span><span class="${pillCls}">${l.req===0?'Start':l.req+' XP'}</span></div><ul class="ul-list">${items}</ul></div></div>`;
+    const expand=isCur||(next&&l.lv===next.lv);
+    const items=expand?`<ul class="ul-list">${l.unlocks.map(u=>`<li>${ul?'✓ ':'🔒 '}${u}</li>`).join('')}</ul>`:'';
+    tl.innerHTML+=`<div class="lv-row"><div class="lv-dot${isCur?' current':ul?' unlocked':''}"></div><div class="lv-block ${state}"><div class="lv-hd" style="${items?'':'margin-bottom:0'}"><span class="lv-title">Level ${l.lv} — ${l.name}</span><span class="${pillCls}">${l.req===0?'Start':l.req+' XP'}</span></div>${items}</div></div>`;
   });
 }
 
@@ -2056,12 +2057,17 @@ function renderRep(bal){
     rlist.appendChild(grid);
   });
   const ll=g('log-list');g('log-count').textContent=repLog.length+' entries';
-  if(!repLog.length){ll.innerHTML='<div style="font-size:13px;color:var(--tx-s);padding:10px 0;text-align:center">No history yet.</div>';return;}
-  ll.innerHTML='';[...repLog].reverse().slice(0,30).forEach(e=>{
+  const moreRow=g('log-more-row');
+  if(!repLog.length){ll.innerHTML='<div style="font-size:13px;color:var(--tx-s);padding:10px 0;text-align:center">No history yet.</div>';moreRow.style.display='none';return;}
+  const LOG_PREVIEW=5;
+  const visCount=logExpanded?30:LOG_PREVIEW;
+  ll.innerHTML='';[...repLog].reverse().slice(0,visCount).forEach(e=>{
     const earn=e.amt>0;const d=document.createElement('div');d.className='log-row';
     d.innerHTML=`<span style="font-size:16px">${earn?'🪙':'🛍️'}</span><div class="log-body">${e.note}</div><span class="log-amt" style="color:${earn?'#BA7517':'#A32D2D'}">${earn?'+':''}${e.amt} Rep</span>`;
     ll.appendChild(d);
   });
+  if(repLog.length>LOG_PREVIEW){moreRow.style.display='block';g('log-more-btn').textContent=logExpanded?'Show less':'Show all';}
+  else moreRow.style.display='none';
 }
 
 /* ===== REWARD CELEBRATION ===== */
@@ -2129,6 +2135,10 @@ function toggleP(id,checked){const tk=dk(tod());let c=getPC(tk);c=checked?[...ne
 function toggleOpt(){optOpen=!optOpen;g('opt-list').style.display=optOpen?'block':'none';g('opt-chev').style.transform=optOpen?'rotate(90deg)':'';}
 let moreOpen=false;
 function toggleMore(){moreOpen=!moreOpen;g('today-more').style.display=moreOpen?'block':'none';g('more-chev').style.transform=moreOpen?'rotate(90deg)':'';}
+let logExpanded=false;
+function toggleLogExpand(){logExpanded=!logExpanded;renderRep(repBalance());}
+let manualAdjOpen=false;
+function toggleManualAdj(){manualAdjOpen=!manualAdjOpen;g('manual-adj-row').style.display=manualAdjOpen?'flex':'none';g('manual-chev').style.transform=manualAdjOpen?'rotate(90deg)':'';}
 
 /* ===== TO-DO (ad-hoc daily tasks, separate from fixed habits) ===== */
 function addTodo(){
