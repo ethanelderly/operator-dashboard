@@ -578,36 +578,6 @@ button{cursor:pointer}
       <button class="btn-sm btn-acc" onclick="addTodo()">+ Add</button>
     </div>
   </div>
-  <div class="card" style="padding:0.75rem 1.25rem;margin-bottom:10px">
-    <div class="opt-toggle" onclick="toggleMore()" style="margin-top:0"><i class="ti ti-chevron-right" id="more-chev" style="font-size:12px"></i> More <span style="font-size:11px;color:var(--tx-s);margin-left:4px">penalties · quest actions · week · rewards</span></div>
-  </div>
-  <div id="today-more" style="display:none">
-  <div class="card">
-    <div class="row-hd"><div class="ttl">Penalties</div><span class="sub">check if violated today</span></div>
-    <div id="pen-list"></div>
-  </div>
-  <div class="card" id="quest-actions-section" style="display:none">
-  <div class="row-hd">
-    <div class="ttl">Active quest actions</div>
-    <span class="sub">next milestone per quest</span>
-  </div>
-  <div id="quest-actions-list"></div>
-</div>
-  <div class="card">
-    <div class="row-hd"><div class="ttl">This week</div><span class="sub" id="week-avg"></span></div>
-    <div class="week-grid" id="week-grid"></div>
-  </div>
-  <div class="card" style="background:linear-gradient(135deg,#FAEEDA,#FEF3C7);border-color:#FAC775">
-    <div class="row-hd">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#EF9F27,#F59E0B);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;box-shadow:0 2px 6px rgba(239,159,39,0.3)">🏅</div>
-        <div><div style="font-size:16px;font-weight:700;color:#412402" id="today-rep-bal">0 Rep</div><div style="font-size:11px;color:#854F0B">available</div></div>
-      </div>
-      <div style="text-align:right"><div style="font-size:13px;font-weight:600;color:#BA7517" id="today-rep-earned">+0 today</div><div style="font-size:11px;color:#854F0B">incl. overflow</div></div>
-    </div>
-    <button class="btn-sm" onclick="setView('rep')" style="font-size:12px;border-color:#FAC775;color:#633806;width:100%;justify-content:center;display:flex;align-items:center;gap:5px;margin-top:4px">🛍️ Open reward store</button>
-  </div>
-  </div>
 </div>
 
 <!-- QUESTS -->
@@ -1137,59 +1107,6 @@ function shortenAction(text){
   }
   return t;
 }
-function renderQuestActions(tk){
-  const section=g('quest-actions-section');
-  if(!section)return;
-  const actions=[];
-  ['p','i','d','s'].forEach(cat=>{
-    (quests[cat]||[]).filter(q=>!q.done).forEach(q=>{
-      /* Find next unticked milestone */
-      if(q.subquests&&q.subquests.length){
-        q.subquests.filter(sq=>!sq.done).forEach(sq=>{
-          const nextMs=(sq.milestones||[]).findIndex((_,i)=>!(sq.tickedMs||[]).includes(i));
-          if(nextMs>=0)actions.push({questId:q.id,sqIdx:q.subquests.indexOf(sq),msIdx:nextMs,label:sq.milestones[nextMs],questName:q.name,cat});
-        });
-      } else if(q.milestones&&q.milestones.length){
-        const nextMs=q.milestones.findIndex((_,i)=>!(q.tickedMs||[]).includes(i));
-        if(nextMs>=0)actions.push({questId:q.id,sqIdx:null,msIdx:nextMs,label:q.milestones[nextMs],questName:q.name,cat});
-      }
-    });
-  });
-  if(!actions.length){section.style.display='none';return;}
-  section.style.display='block';
-  const list=g('quest-actions-list');list.innerHTML='';
-  const COL={p:'#1D9E75',i:'#2563EB',d:'var(--acc)',s:'#EF9F27'};
-  const CATBG={p:'#E1F5EE',i:'#DBEAFE',d:'#EDE9FE',s:'#FAEEDA'};
-  const CATTX={p:'#085041',i:'#1E40AF',d:'#4C1D95',s:'#633806'};
-  actions.slice(0,5).forEach(a=>{
-    const row=document.createElement('div');row.className='habit-row qa-row';
-    const alreadyTicked=a.sqIdx!==null
-      ?(findQ(a.questId)?.subquests?.[a.sqIdx]?.tickedMs||[]).includes(a.msIdx)
-      :(findQ(a.questId)?.tickedMs||[]).includes(a.msIdx);
-    row.innerHTML=`
-      <input type="checkbox" ${alreadyTicked?'checked':''} style="width:18px;height:18px;accent-color:${COL[a.cat]};flex-shrink:0;cursor:pointer">
-      <span class="hname${alreadyTicked?' done':''}" title="${qeEsc(a.label)}">${qeEsc(shortenAction(a.label))}</span>
-      <span class="qa-tag" style="background:${CATBG[a.cat]};color:${CATTX[a.cat]}" title="${qeEsc(a.questName)}"><i class="ti ${ICON_MAP[a.cat]}"></i></span>`;
-    row.querySelector('input').addEventListener('change',e=>{
-      const q=findQ(a.questId);if(!q)return;
-      if(a.sqIdx!==null){
-        const sq=q.subquests[a.sqIdx];if(!sq.tickedMs)sq.tickedMs=[];
-        if(e.target.checked){if(!sq.tickedMs.includes(a.msIdx))sq.tickedMs.push(a.msIdx);}
-        else sq.tickedMs=sq.tickedMs.filter(x=>x!==a.msIdx);
-        if(sq.tickedMs.length===sq.milestones.length)sq.done=true;
-        if(q.subquests.every(s=>s.done)&&!q.done){q.done=true;handleQuestComplete(q);}
-      } else {
-        if(!q.tickedMs)q.tickedMs=[];
-        if(e.target.checked){if(!q.tickedMs.includes(a.msIdx))q.tickedMs.push(a.msIdx);}
-        else q.tickedMs=q.tickedMs.filter(x=>x!==a.msIdx);
-        if(q.tickedMs.length===q.milestones.length&&!q.done){q.done=true;handleQuestComplete(q);}
-      }
-      saveQuests();renderAll();
-    });
-    list.appendChild(row);
-  });
-}
-
 function scheduleSave(){
   if(syncTimeout)clearTimeout(syncTimeout);
   syncTimeout=setTimeout(saveData,1500);
@@ -1320,8 +1237,6 @@ function renderAll(){
   g('g-i').textContent=iXP;g('g-ib').style.width=maxI?Math.min(100,iXP/maxI*100)+'%':'0%';
   g('g-d').textContent=dXP;g('g-db').style.width=maxD?Math.min(100,dXP/maxD*100)+'%':'0%';
   const bal=repBalance();
-  g('today-rep-bal').textContent=bal+' Rep';
-  g('today-rep-earned').textContent='+'+todayHabitRep()+' today';
   g('lv-badge').textContent='Lv '+getLv(lvXP).lv+' — '+getLv(lvXP).name;
   if(currentView==='today')renderToday(tk,streak,lvXP);
   if(currentView==='quests')renderQuests();
@@ -1370,28 +1285,7 @@ function renderToday(tk,streak,perfStreak){
     row.querySelector('input').addEventListener('change',e=>{if(e.target.checked)toggleTodo(td.id,e);});
     todoList.appendChild(row);attachHold('tdo_'+td.id,()=>deleteTodo(td.id));
   });
-  const pc=getPC(tk);const penList=g('pen-list');penList.innerHTML='';
-  pen.forEach(h=>{
-    const hit=pc.includes(h.id);const row=document.createElement('div');row.className='pen-row';
-    row.innerHTML=`<input type="checkbox" ${hit?'checked':''} style="width:18px;height:18px;accent-color:#E24B4A;flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="plbl">${h.name}</span><span class="pbadge">${h.xp} XP</span><button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','pen')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('pd_'+h.id)}`;
-    row.querySelector('input').addEventListener('change',e=>toggleP(h.id,e.target.checked));
-    penList.appendChild(row);attachHold('pd_'+h.id,()=>deleteHabit(h.id,'pen'));
-  });
-  renderWeek(t,tk);
   if(pct>=100)showCel('Perfect day — optional habits earn overflow Rep.','cel-hab');
-  renderQuestActions(tk);
-}
-
-function renderWeek(t,tk){
-  const mon=getMonday(t);const grid=g('week-grid');grid.innerHTML='';let tot=0,cnt=0;
-  for(let i=0;i<7;i++){
-    const d=new Date(mon);d.setDate(mon.getDate()+i);
-    const k=dk(d);const isT=k===tk;const fut=d>t;const pct=fut?null:dayPct(k);
-    let cls='circle';if(isT)cls+=' today';
-    if(!fut){if(pct>=100)cls+=' done';else if(pct>0)cls+=' partial';tot+=pct||0;cnt++;}
-    grid.innerHTML+=`<div class="wd"><div class="${cls}">${isT?'●':d.getDate()}</div><div class="dn">${DAYS[d.getDay()]}</div></div>`;
-  }
-  g('week-avg').textContent=cnt?'Avg '+Math.round(tot/cnt)+'%':'';
 }
 
 /* ===== QUESTS ===== */
@@ -2133,8 +2027,6 @@ function toggleH(id,checked,e){const tk=dk(tod());let c=getC(tk);c=checked?[...n
 function toggleO(id,checked,e){const tk=dk(tod());let c=getOC(tk);c=checked?[...new Set([...c,id])]:c.filter(x=>x!==id);optComp[tk]=c;if(checked&&e){const h=opt.find(x=>x.id===id);if(h)showXpPop(e,h.xp);}updateRepBank();scheduleSave();renderAll();}
 function toggleP(id,checked){const tk=dk(tod());let c=getPC(tk);c=checked?[...new Set([...c,id])]:c.filter(x=>x!==id);penComp[tk]=c;updateRepBank();scheduleSave();renderAll();}
 function toggleOpt(){optOpen=!optOpen;g('opt-list').style.display=optOpen?'block':'none';g('opt-chev').style.transform=optOpen?'rotate(90deg)':'';}
-let moreOpen=false;
-function toggleMore(){moreOpen=!moreOpen;g('today-more').style.display=moreOpen?'block':'none';g('more-chev').style.transform=moreOpen?'rotate(90deg)':'';}
 let logExpanded=false;
 function toggleLogExpand(){logExpanded=!logExpanded;renderRep(repBalance());}
 let manualAdjOpen=false;
