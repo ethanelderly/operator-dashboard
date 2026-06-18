@@ -245,29 +245,29 @@ button{cursor:pointer}
 .rf-row{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
 .rf-cost{font-size:13px;font-weight:700;color:#fff;background:rgba(255,255,255,0.18);padding:5px 11px;border-radius:99px}
 .reward-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px}
-.reward-card{position:relative;border-radius:var(--r-lg);padding:.9rem;display:flex;flex-direction:column;gap:6px;transition:transform .15s,box-shadow .15s;overflow:hidden;color:#fff;box-shadow:0 3px 10px rgba(0,0,0,0.2)}
-.reward-card:hover{transform:translateY(-2px)}
-.reward-card.rc-t1{background:linear-gradient(160deg,#3B7CF0,#1A3F99)}
-.reward-card.rc-t2{background:linear-gradient(160deg,#A346E0,#6420A8)}
-.reward-card.rc-t3{background:linear-gradient(160deg,#F2A93B,#D9622B)}
+.reward-card{position:relative;border-radius:var(--r-lg);padding:.9rem;display:flex;flex-direction:column;gap:6px;transition:transform .15s,box-shadow .15s;overflow:hidden;background:var(--bg-p);border:0.5px solid var(--bd-t);box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.reward-card:hover{transform:translateY(-2px);box-shadow:0 3px 10px rgba(0,0,0,0.08)}
+.reward-card.rc-t1{border-left:3px solid #3B7CF0}
+.reward-card.rc-t2{border-left:3px solid #A346E0}
+.reward-card.rc-t3{border-left:3px solid #D9622B}
 .reward-card.claimed-one{opacity:.5;filter:grayscale(.35)}
-.reward-card.can-afford{box-shadow:0 0 0 2px rgba(255,255,255,0.55),0 3px 10px rgba(0,0,0,0.2)}
-.rc-new{position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;letter-spacing:.04em;color:#3B2A6B;background:#fff;padding:2px 7px;border-radius:99px;z-index:1}
+.reward-card.can-afford{box-shadow:0 0 0 2px var(--acc-m),0 1px 4px rgba(0,0,0,0.05)}
+.rc-new{position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--acc);padding:2px 7px;border-radius:99px;z-index:1}
 .rc-emoji{font-size:26px;margin-bottom:2px;display:block;line-height:1}
-.rc-name{font-size:13px;font-weight:600;line-height:1.3;flex:1;color:#fff}
-.rc-name.claimed{text-decoration:line-through;color:rgba(255,255,255,0.7)}
+.rc-name{font-size:13px;font-weight:600;line-height:1.3;flex:1;color:var(--tx-p)}
+.rc-name.claimed{text-decoration:line-through;color:var(--tx-s)}
 .rc-cost{display:flex;align-items:center;justify-content:space-between;margin-top:auto;gap:6px}
-.rc-pill{font-size:12px;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,0.22);color:#fff;white-space:nowrap}
-.btn-buy{background:rgba(255,255,255,0.92);border:none;border-radius:var(--r-md);padding:4px 10px;font-size:12px;cursor:pointer;color:#222;white-space:nowrap;font-weight:700}
-.btn-buy:hover{background:#fff}
-.btn-buy:disabled{opacity:.4;cursor:not-allowed;background:rgba(255,255,255,0.4)}
-.btn-buy.can-claim{background:#fff;color:#1A1A1A}
+.rc-pill{font-size:12px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--bg-s);color:var(--tx-p);white-space:nowrap}
+.btn-buy{background:var(--acc);border:none;border-radius:var(--r-md);padding:4px 10px;font-size:12px;cursor:pointer;color:#fff;white-space:nowrap;font-weight:700}
+.btn-buy:hover{opacity:.9}
+.btn-buy:disabled{opacity:.35;cursor:not-allowed}
+.btn-buy.can-claim{background:var(--acc);color:#fff}
 .btn-buy.can-claim:hover{opacity:.9}
-.btn-buy.owned{background:rgba(255,255,255,0.85);color:#1A6B2E}
-.rep-tag{font-size:10px;padding:1px 5px;border-radius:99px;background:rgba(255,255,255,0.22);color:#fff}
+.btn-buy.owned{background:var(--bg-s);color:#1A6B2E}
+.rep-tag{font-size:10px;padding:1px 5px;border-radius:99px;background:var(--bg-s);color:var(--tx-s)}
 .rc-del{position:absolute;top:6px;right:6px;z-index:1}
-.reward-card .del-btn{color:rgba(255,255,255,0.8)}
-.reward-card .del-wrap circle.trk{stroke:rgba(255,255,255,0.35)}
+.reward-card .del-btn{color:var(--tx-s)}
+.reward-card .del-wrap circle.trk{stroke:var(--bd-t)}
 .log-row{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:0.5px solid var(--bd-t)}
 .log-row:last-child{border-bottom:none}
 .log-body{flex:1;font-size:13px}
@@ -579,6 +579,10 @@ button{cursor:pointer}
     </div>
     <div class="del-hint"><i class="ti ti-hand-stop" style="font-size:12px"></i> Hold ✕ 2 s to remove</div>
   </div>
+  <div class="card" style="padding:0.75rem 1.25rem;margin-bottom:10px">
+    <div class="opt-toggle" onclick="toggleMore()" style="margin-top:0"><i class="ti ti-chevron-right" id="more-chev" style="font-size:12px"></i> More <span style="font-size:11px;color:var(--tx-s);margin-left:4px">penalties · quest actions · week · rewards</span></div>
+  </div>
+  <div id="today-more" style="display:none">
   <div class="card">
     <div class="row-hd"><div class="ttl">Penalties</div><span class="sub">check if violated today</span></div>
     <div id="pen-list"></div>
@@ -603,6 +607,7 @@ button{cursor:pointer}
       <div style="text-align:right"><div style="font-size:13px;font-weight:600;color:#BA7517" id="today-rep-earned">+0 today</div><div style="font-size:11px;color:#854F0B">incl. overflow</div></div>
     </div>
     <button class="btn-sm" onclick="setView('rep')" style="font-size:12px;border-color:#FAC775;color:#633806;width:100%;justify-content:center;display:flex;align-items:center;gap:5px;margin-top:4px">🛍️ Open reward store</button>
+  </div>
   </div>
 </div>
 
@@ -2122,6 +2127,8 @@ function toggleH(id,checked,e){const tk=dk(tod());let c=getC(tk);c=checked?[...n
 function toggleO(id,checked,e){const tk=dk(tod());let c=getOC(tk);c=checked?[...new Set([...c,id])]:c.filter(x=>x!==id);optComp[tk]=c;if(checked&&e){const h=opt.find(x=>x.id===id);if(h)showXpPop(e,h.xp);}updateRepBank();scheduleSave();renderAll();}
 function toggleP(id,checked){const tk=dk(tod());let c=getPC(tk);c=checked?[...new Set([...c,id])]:c.filter(x=>x!==id);penComp[tk]=c;updateRepBank();scheduleSave();renderAll();}
 function toggleOpt(){optOpen=!optOpen;g('opt-list').style.display=optOpen?'block':'none';g('opt-chev').style.transform=optOpen?'rotate(90deg)':'';}
+let moreOpen=false;
+function toggleMore(){moreOpen=!moreOpen;g('today-more').style.display=moreOpen?'block':'none';g('more-chev').style.transform=moreOpen?'rotate(90deg)':'';}
 
 /* ===== TO-DO (ad-hoc daily tasks, separate from fixed habits) ===== */
 function addTodo(){
