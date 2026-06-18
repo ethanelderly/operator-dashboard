@@ -48,6 +48,7 @@ button{cursor:pointer}
 /* LAYOUT */
 .app{padding:.75rem 0 4rem}
 .card{background:var(--bg-p);border:0.5px solid var(--bd-t);border-radius:var(--r-lg);padding:1rem 1.25rem;margin-bottom:10px}
+.card.card-todo{border-left:3px solid var(--acc)}
 .row-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
 .ttl{font-size:15px;font-weight:600}
 .sub{font-size:12px;color:var(--tx-s)}
@@ -537,6 +538,15 @@ button{cursor:pointer}
 
 <!-- TODAY -->
 <div class="view active" id="view-today">
+  <div class="card card-todo">
+    <div class="row-hd"><div class="ttl" style="color:var(--acc-d);display:flex;align-items:center;gap:6px"><i class="ti ti-list-check"></i>To-Do</div><span class="sub" id="todo-hint"></span></div>
+    <div id="todo-list"></div>
+    <div class="add-row">
+      <input type="text" id="todo-name" placeholder="Add a small task…" style="flex:1;min-width:120px" onkeydown="if(event.key==='Enter')addTodo()">
+      <input type="number" id="todo-xp" placeholder="XP" value="10" min="1" style="width:56px" onkeydown="if(event.key==='Enter')addTodo()">
+      <button class="btn-sm btn-acc" onclick="addTodo()">+ Add</button>
+    </div>
+  </div>
   <div class="card">
     <div class="row-hd">
       <div class="ttl" id="today-lbl">Today</div>
@@ -558,15 +568,6 @@ button{cursor:pointer}
     <div id="opt-list" style="display:none"></div>
     <div class="del-hint"><i class="ti ti-hand-stop" style="font-size:12px"></i> Hold ✕ 2 s to remove</div>
   </div>
-  <div class="card">
-    <div class="row-hd"><div class="ttl">To-Do</div><span class="sub" id="todo-hint"></span></div>
-    <div id="todo-list"></div>
-    <div class="add-row">
-      <input type="text" id="todo-name" placeholder="Add a small task…" style="flex:1;min-width:120px" onkeydown="if(event.key==='Enter')addTodo()">
-      <input type="number" id="todo-xp" placeholder="XP" value="10" min="1" style="width:56px" onkeydown="if(event.key==='Enter')addTodo()">
-      <button class="btn-sm btn-acc" onclick="addTodo()">+ Add</button>
-    </div>
-  </div>
 </div>
 
 <!-- QUESTS -->
@@ -574,17 +575,6 @@ button{cursor:pointer}
   <div class="card">
     <div class="q-tab-row" id="q-tabs"></div>
     <div id="q-list"></div>
-
-    <!-- Side quest AI generator (only shows on side quest tab) -->
-    <div id="sq-ai-section" style="display:none;margin-top:12px;padding-top:12px;border-top:0.5px solid var(--bd-t)">
-      <div style="font-size:13px;font-weight:600;margin-bottom:8px">✨ AI Side Quest Generator</div>
-      <div style="font-size:12px;color:var(--tx-s);margin-bottom:8px">Tell me what you're in the mood for and I'll suggest 3 side quests tailored to you.</div>
-      <div style="display:flex;gap:6px;margin-bottom:8px">
-        <input type="text" id="sq-ai-input" placeholder="e.g. something outdoors, or a creative challenge…" style="flex:1;padding:7px 10px;font-size:13px">
-        <button class="btn-sm btn-acc" onclick="generateSideQuestSuggestions()" id="sq-ai-btn">Suggest</button>
-      </div>
-      <div class="sq-ai-box" id="sq-ai-box"></div>
-    </div>
 
     <div class="del-hint"><i class="ti ti-hand-stop" style="font-size:12px"></i> Hold ✕ 2 s to remove</div>
     <div style="margin-top:12px;padding-top:12px;border-top:0.5px solid var(--bd-t)">
@@ -596,6 +586,17 @@ button{cursor:pointer}
         <select id="qn-cat"><option value="p">Physique</option><option value="i">Income</option><option value="d">Discipline</option><option value="s">Side quest</option></select>
         <select id="qn-diff"><option value="e">Easy</option><option value="m">Medium</option><option value="h">Hard</option></select>
         <button class="btn-sm btn-acc" onclick="addQuest()">✦ Add</button>
+      </div>
+      <!-- AI Side quest generator: only visible on side-quest tab, collapsed by default -->
+      <div id="sq-ai-section" style="display:none">
+        <div class="opt-toggle" onclick="toggleSqAi()"><i class="ti ti-chevron-right" id="sq-ai-chev" style="font-size:12px"></i> ✨ Not sure? Get AI suggestions</div>
+        <div id="sq-ai-body" style="display:none;margin-top:8px">
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <input type="text" id="sq-ai-input" placeholder="e.g. something outdoors, or a creative challenge…" style="flex:1;padding:7px 10px;font-size:13px">
+            <button class="btn-sm btn-acc" onclick="generateSideQuestSuggestions()" id="sq-ai-btn">Suggest</button>
+          </div>
+          <div class="sq-ai-box" id="sq-ai-box"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1931,6 +1932,8 @@ function toggleH(id,checked,e){const tk=dk(tod());let c=getC(tk);c=checked?[...n
 function toggleO(id,checked,e){const tk=dk(tod());let c=getOC(tk);c=checked?[...new Set([...c,id])]:c.filter(x=>x!==id);optComp[tk]=c;if(checked&&e){const h=opt.find(x=>x.id===id);if(h)showXpPop(e,h.xp);}updateRepBank();scheduleSave();renderAll();}
 function toggleP(id,checked){const tk=dk(tod());let c=getPC(tk);c=checked?[...new Set([...c,id])]:c.filter(x=>x!==id);penComp[tk]=c;updateRepBank();scheduleSave();renderAll();}
 function toggleOpt(){optOpen=!optOpen;g('opt-list').style.display=optOpen?'block':'none';g('opt-chev').style.transform=optOpen?'rotate(90deg)':'';}
+let sqAiOpen=false;
+function toggleSqAi(){sqAiOpen=!sqAiOpen;g('sq-ai-body').style.display=sqAiOpen?'block':'none';g('sq-ai-chev').style.transform=sqAiOpen?'rotate(90deg)':'';}
 let logExpanded=false;
 function toggleLogExpand(){logExpanded=!logExpanded;renderRep(repBalance());}
 let manualAdjOpen=false;
