@@ -353,26 +353,10 @@ button{cursor:pointer}
 .qedit-danger{background:none;border:none;color:#A32D2D;font-size:12px;padding:10px 0 0;cursor:pointer;width:100%;text-align:left}
 .qedit-danger:hover{text-decoration:underline}
 
-/* QUESTMASTERS */
-.gs-pill{background:var(--bg-s);border:0.5px solid var(--bd-t);border-radius:var(--r-md);padding:8px 12px;flex:1;min-width:90px;text-align:center}
-.gs-pill .gs-num{font-size:14px;font-weight:700;color:var(--tx-p)}
-.gs-pill .gs-lbl{font-size:10px;color:var(--tx-s);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
-.qm-card{padding:0!important;overflow:hidden}
-.qm-hd{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer}
-.qm-hd:hover{background:color-mix(in srgb,var(--acc) 4%,transparent)}
-.qm-avatar{width:40px;height:40px;border-radius:50%;background:var(--acc-l);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
 .profile-hd{display:flex;align-items:center;gap:14px}
 .profile-avatar{width:56px;height:56px;border-radius:50%;background:var(--acc-l);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;cursor:pointer;border:0.5px solid var(--bd-t)}
 .profile-id{flex:1;min-width:0}
 .profile-name{font-size:16px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.qm-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:8px;padding:0 16px 14px;border-top:0.5px solid var(--bd-t);padding-top:12px}
-.qm-stat{text-align:center}
-.qm-stat-n{font-size:15px;font-weight:700}
-.qm-stat-l{font-size:10px;color:var(--tx-s);text-transform:uppercase;letter-spacing:.04em;margin-top:1px}
-.qm-quests{padding:0 16px 14px;border-top:0.5px solid var(--bd-t);padding-top:8px}
-.qm-quest-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--bd-t);cursor:pointer}
-.qm-quest-row:last-child{border-bottom:none}
-.qm-quest-row:hover{color:var(--acc-d)}
 .gear-btn{position:fixed;top:10px;right:10px;width:36px;height:36px;border-radius:50%;background:var(--bg-p);border:0.5px solid var(--bd-t);color:var(--tx-s);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,0.08);transition:all .15s}
 .gear-btn:hover{color:var(--acc);border-color:var(--acc-m)}
 .gear-btn.active{color:var(--acc);background:var(--acc-l);border-color:var(--acc-m)}
@@ -398,8 +382,16 @@ button{cursor:pointer}
     <div class="qedit-hd">Edit quest</div>
     <div class="qedit-sub" id="qedit-qname"></div>
 
-    <label class="qedit-lbl">Name</label>
-    <input id="qedit-name" type="text" placeholder="Quest name">
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <div style="width:54px;flex-shrink:0">
+        <label class="qedit-lbl">Emoji</label>
+        <input id="qedit-emoji" type="text" placeholder="🎯" maxlength="4" style="text-align:center">
+      </div>
+      <div style="flex:1">
+        <label class="qedit-lbl">Name</label>
+        <input id="qedit-name" type="text" placeholder="Quest name">
+      </div>
+    </div>
 
     <label class="qedit-lbl">Description</label>
     <textarea id="qedit-sub" placeholder="What does done look like?"></textarea>
@@ -426,8 +418,6 @@ button{cursor:pointer}
 
     <label class="qedit-lbl">Tags <span style="color:var(--tx-s);font-weight:400">(comma separated)</span></label>
     <input id="qedit-tags" type="text" placeholder="e.g. strength, morning, work">
-    <label class="qedit-lbl">Questmaster</label>
-    <select id="qedit-qm"></select>
     <label class="qedit-lbl" id="qedit-income-lbl" style="display:none">Income on completion <span style="color:var(--tx-s);font-weight:400">(£)</span></label>
     <input id="qedit-income" type="number" min="0" step="any" placeholder="0" style="display:none">
 
@@ -541,7 +531,6 @@ button{cursor:pointer}
 <div class="nav">
   <button class="nav-btn active" onclick="setView('today')" id="nav-today"><i class="ti ti-sun"></i>Today</button>
   <button class="nav-btn" onclick="setView('quests')" id="nav-quests"><i class="ti ti-sword"></i>Quests</button>
-  <button class="nav-btn" onclick="setView('crew')" id="nav-crew"><i class="ti ti-users"></i>Crew</button>
   <button class="nav-btn" onclick="setView('levels')" id="nav-levels"><i class="ti ti-trophy"></i>Levels</button>
   <button class="nav-btn" onclick="setView('rep')" id="nav-rep"><i class="ti ti-hexagon-letter-r"></i>Rep</button>
 </div>
@@ -602,29 +591,12 @@ button{cursor:pointer}
       <div style="font-size:13px;font-weight:600;margin-bottom:6px">Add a quest</div>
       <div style="font-size:12px;color:var(--tx-s);margin-bottom:8px">Claude will automatically make it SMART — clarifying the objective and generating milestones.</div>
       <div class="add-row">
+        <input type="text" id="qn-emoji" placeholder="🎯" maxlength="4" style="width:46px;text-align:center">
         <input type="text" id="qn-name" placeholder="What do you want to achieve?" style="flex:1;min-width:120px">
         <select id="qn-cat"><option value="p">Physique</option><option value="i">Income</option><option value="d">Discipline</option><option value="s">Side quest</option></select>
         <select id="qn-diff"><option value="e">Easy</option><option value="m">Medium</option><option value="h">Hard</option></select>
         <button class="btn-sm btn-acc" onclick="addQuest()">✦ Add</button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- LEVELS -->
-<div class="view" id="view-crew">
-  <div class="card">
-    <div class="ttl">Questmasters</div>
-    <span class="sub">people, clients, or yourself — who assigns the quests</span>
-    <div id="crew-summary" style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"></div>
-  </div>
-  <div id="crew-list"></div>
-  <div class="card">
-    <div style="font-size:13px;font-weight:600;margin-bottom:8px">Add a Questmaster</div>
-    <div class="add-row">
-      <input id="qm-emoji" placeholder="🧭" style="width:50px;text-align:center" maxlength="2">
-      <input id="qm-name" placeholder="Name (e.g. Sam, Lauren, Client X)" style="flex:1;min-width:140px">
-      <button class="btn-acc" onclick="addQM()" style="padding:6px 12px;font-size:12px">Add</button>
     </div>
   </div>
 </div>
@@ -1011,10 +983,9 @@ function questRepBreakdown(q){
 function calcQuestRep(q){return questRepBreakdown(q).total;}
 
 /* ===== STATE ===== */
-let core,opt,pen,comp,optComp,penComp,quests,rewards,repLog,manualRep,shownLvUp,totalRepBank,repByDay,questmasters,userProfile,todos,todoComp;
+let core,opt,pen,comp,optComp,penComp,quests,rewards,repLog,manualRep,shownLvUp,totalRepBank,repByDay,userProfile,todos,todoComp;
 let optOpen=false,qTab='p',currentView='today';
 let syncTimeout=null;
-let expandedQM=null;
 
 function g(id){return document.getElementById(id);}
 function ss(sc){
@@ -1046,7 +1017,7 @@ function doLogout(){localStorage.removeItem('od9_session');ss('login');g('login-
 /* ===== DATA ===== */
 async function loadData(){
   setSyncState('syncing');
-  const keys=['core','opt','pen','comp','optc','penc','quests','rewards','replog','manrep','shownlv','theme','repbank','repbyday','qm','profile','todos','todoc'];
+  const keys=['core','opt','pen','comp','optc','penc','quests','rewards','replog','manrep','shownlv','theme','repbank','repbyday','profile','todos','todoc'];
   const vals=await Promise.all(keys.map(k=>sbGet(k)));
   const d=Object.fromEntries(keys.map((k,i)=>[k,vals[i]]));
   core=d.core||CORE_DEF;opt=d.opt||OPT_DEF;pen=d.pen||PEN_DEF;
@@ -1061,7 +1032,6 @@ async function loadData(){
   repLog=d.replog||[];
   manualRep=d.manrep||0;shownLvUp=d.shownlv||1;
   totalRepBank=d.repbank||0;repByDay=d.repbyday||{};
-  questmasters=d.qm||[{id:'qm_self',name:'Self',emoji:'🧭'}];
   userProfile=d.profile||{avatar:'🧑',name:'Operator'};
   if(d.theme)applyTheme(d.theme);
   setSyncState('ok');
@@ -1204,7 +1174,7 @@ function activeQuestForStat(stat){
 /* ===== VIEW ===== */
 function setView(v){
   currentView=v;
-  ['today','quests','crew','levels','rep','settings'].forEach(x=>{
+  ['today','quests','levels','rep','settings'].forEach(x=>{
     g('view-'+x).className='view'+(v===x?' active':'');
     const nb=g('nav-'+x);if(nb)nb.className='nav-btn'+(v===x?' active':'');
   });
@@ -1240,7 +1210,6 @@ function renderAll(){
   g('lv-badge').textContent='Lv '+getLv(lvXP).lv+' — '+getLv(lvXP).name;
   if(currentView==='today')renderToday(tk,streak,lvXP);
   if(currentView==='quests')renderQuests();
-  if(currentView==='crew')renderCrew();
   if(currentView==='levels')renderLevels(lvXP);
   if(currentView==='rep')renderRep(bal);
 }
@@ -1411,7 +1380,7 @@ function questCard(q){
   const chainBadge=isChained?`<span class="badge" style="background:var(--acc-l);color:var(--acc-d)">${(q.stepIdx||0)+1}/${QUEST_CHAINS[q.chainCat][q.chainIdx]?.length||'?'}</span>`:'';
   card.innerHTML=`
     <div class="quest-card-hd" onclick="toggleQuestCard('${q.id}')">
-      <div class="qc-icon ${ICON_CLS[qTab]}"><i class="ti ${ICON_MAP[qTab]}"></i></div>
+      <div class="qc-icon ${ICON_CLS[qTab]}">${q.emoji?`<span style="font-size:17px">${q.emoji}</span>`:`<i class="ti ${ICON_MAP[qTab]}"></i>`}</div>
       <div class="qc-body">
         <div class="qc-name${q.done?' done':''}">${q.name}</div>
         ${q.sub?`<div class="qc-sub">${q.sub}</div>`:''}
@@ -1421,7 +1390,6 @@ function questCard(q){
           ${chainBadge}
           ${q.done?'<span class="badge bdone">Done</span>':''}
           ${(q.tags&&q.tags.length)?q.tags.slice(0,3).map(t=>`<span class="qc-tag">#${t}</span>`).join(''):''}
-          ${q.qmId?(()=>{const qm=questmasters.find(x=>x.id===q.qmId);return qm?`<span class="qc-tag" style="background:var(--acc-l);color:var(--acc-d);border-color:var(--acc-m)">${qm.emoji||'·'} ${qm.name}</span>`:'';})():''}
         </div>
       </div>
       <button class="qc-edit" onclick="event.stopPropagation();openQEdit('${q.id}')" title="Edit quest"><i class="ti ti-pencil"></i></button>
@@ -1595,6 +1563,7 @@ function openQEdit(id){
   let curCat='s';
   for(const c of['p','i','d','s'])if((quests[c]||[]).some(x=>x.id===id)){curCat=c;break;}
   g('qedit-qname').textContent='Update any field, then save.';
+  g('qedit-emoji').value=q.emoji||'';
   g('qedit-name').value=q.name||'';
   g('qedit-sub').value=q.sub||'';
   g('qedit-cat').value=curCat;
@@ -1602,11 +1571,6 @@ function openQEdit(id){
   g('qedit-tags').value=(q.tags||[]).join(', ');
   g('qedit-weeks').value=q.estimatedWeeks||'';
   g('qedit-complexity').value=q.complexity||'';
-  /* Build QM dropdown */
-  const qmSel=g('qedit-qm');
-  qmSel.innerHTML='<option value="">— unassigned —</option>'+
-    questmasters.map(qm=>`<option value="${qm.id}">${qm.emoji||'·'} ${qm.name}</option>`).join('');
-  qmSel.value=q.qmId||'';
   /* Income field — show for any quest (especially income cat) */
   const incLbl=g('qedit-income-lbl'),incIn=g('qedit-income');
   const showInc=curCat==='i'||q.income;
@@ -1631,15 +1595,16 @@ function saveQEdit(){
   const newCat=g('qedit-cat').value;
   const newDiff=g('qedit-diff').value;
   const newTags=g('qedit-tags').value.split(',').map(s=>s.trim().toLowerCase().replace(/^#/,'')).filter(Boolean).slice(0,8);
-  const newQM=g('qedit-qm').value||null;
   const incVal=parseFloat(g('qedit-income').value);
   const newName=g('qedit-name').value.trim();
+  const newEmoji=g('qedit-emoji').value.trim();
   const newSub=g('qedit-sub').value.trim();
   const weeksVal=parseFloat(g('qedit-weeks').value);
   const compVal=parseInt(g('qedit-complexity').value);
   if(newName)q.name=newName;
+  if(newEmoji)q.emoji=newEmoji;else delete q.emoji;
   q.sub=newSub;
-  q.diff=newDiff;q.tags=newTags;q.cat=newCat;q.qmId=newQM;
+  q.diff=newDiff;q.tags=newTags;q.cat=newCat;
   if(newCat==='i'&&!isNaN(incVal)&&incVal>0)q.income=incVal;
   else if(newCat!=='i')delete q.income;
   if(!isNaN(weeksVal)&&weeksVal>0)q.estimatedWeeks=weeksVal;else delete q.estimatedWeeks;
@@ -1678,70 +1643,6 @@ function saveQEdit(){
 }
 
 /* ===== QUESTMASTERS ===== */
-function saveQM(){sbSet('qm',questmasters);scheduleSave();}
-function allQuests(){return[...quests.p,...quests.i,...quests.d,...quests.s];}
-function qmStats(qmId){
-  const qs=allQuests().filter(q=>q.qmId===qmId);
-  const done=qs.filter(q=>q.done);
-  const rep=done.reduce((a,q)=>a+calcQuestRep(q),0);
-  const income=done.reduce((a,q)=>a+(parseFloat(q.income)||0),0);
-  return{assigned:qs.length,completed:done.length,rep,income,rate:qs.length?Math.round(done.length/qs.length*100):0,quests:qs};
-}
-function addQM(){
-  const name=g('qm-name').value.trim();if(!name)return;
-  const emoji=g('qm-emoji').value.trim()||'👤';
-  questmasters.push({id:'qm_'+Date.now(),name,emoji});
-  g('qm-name').value='';g('qm-emoji').value='';
-  saveQM();renderCrew();
-}
-function deleteQM(id){
-  if(id==='qm_self'){alert('Cannot delete the Self questmaster.');return;}
-  if(!confirm('Delete this Questmaster? Assigned quests will become unassigned.'))return;
-  questmasters=questmasters.filter(qm=>qm.id!==id);
-  allQuests().forEach(q=>{if(q.qmId===id)q.qmId=null;});
-  saveQM();saveQuests();renderCrew();
-}
-function toggleQM(id){expandedQM=expandedQM===id?null:id;renderCrew();}
-
-function renderCrew(){
-  const list=g('crew-list');
-  const sum=g('crew-summary');
-  const all=allQuests();
-  const assigned=all.filter(q=>q.qmId).length;
-  const topQM=[...questmasters].map(qm=>({qm,s:qmStats(qm.id)})).sort((a,b)=>b.s.assigned-a.s.assigned)[0];
-  sum.innerHTML=`
-    <div class="gs-pill"><div class="gs-num">${questmasters.length}</div><div class="gs-lbl">Questmasters</div></div>
-    <div class="gs-pill"><div class="gs-num">${assigned}</div><div class="gs-lbl">assigned quests</div></div>
-    <div class="gs-pill"><div class="gs-num">${topQM&&topQM.s.assigned?topQM.qm.emoji+' '+topQM.qm.name:'—'}</div><div class="gs-lbl">most active</div></div>`;
-  if(!questmasters.length){list.innerHTML='<div class="card" style="text-align:center;color:var(--tx-s);font-size:13px">No Questmasters yet. Add one below.</div>';return;}
-  list.innerHTML='';
-  questmasters.forEach(qm=>{
-    const s=qmStats(qm.id);
-    const open=expandedQM===qm.id;
-    const incomeRow=s.income>0?`<div class="qm-stat"><div class="qm-stat-n">£${s.income.toFixed(0)}</div><div class="qm-stat-l">income</div></div>`:'';
-    const card=document.createElement('div');card.className='card qm-card';
-    card.innerHTML=`
-      <div class="qm-hd" onclick="toggleQM('${qm.id}')">
-        <div class="qm-avatar">${qm.emoji||'👤'}</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:600">${qm.name}</div>
-          <div style="font-size:11px;color:var(--tx-s);margin-top:2px">${s.assigned} quest${s.assigned===1?'':'s'} · ${s.rate}% complete</div>
-        </div>
-        ${qm.id!=='qm_self'?`<button class="qc-edit" onclick="event.stopPropagation();deleteQM('${qm.id}')" title="Delete"><i class="ti ti-trash"></i></button>`:''}
-        <i class="ti ti-chevron-right qc-chevron${open?' open':''}" style="margin-left:4px"></i>
-      </div>
-      <div class="qm-stats">
-        <div class="qm-stat"><div class="qm-stat-n">${s.assigned}</div><div class="qm-stat-l">assigned</div></div>
-        <div class="qm-stat"><div class="qm-stat-n">${s.completed}</div><div class="qm-stat-l">done</div></div>
-        <div class="qm-stat"><div class="qm-stat-n" style="color:#BA7517">${s.rep}</div><div class="qm-stat-l">Rep earned</div></div>
-        ${incomeRow}
-      </div>
-      ${open?`<div class="qm-quests">${s.quests.length?s.quests.map(q=>`<div class="qm-quest-row" onclick="setView('quests');setQTab('${getCatOf(q.id)}')"><i class="ti ${ICON_MAP[getCatOf(q.id)]||'ti-sword'}" style="color:var(--tx-s);font-size:13px"></i><span style="flex:1;font-size:13px;${q.done?'text-decoration:line-through;color:var(--tx-s)':''}">${q.name}</span><span class="badge ${BCAT[getCatOf(q.id)]||'bq-s'}" style="font-size:10px">${CAT_LBL[getCatOf(q.id)]||'?'}</span></div>`).join(''):'<div style="font-size:12px;color:var(--tx-s);text-align:center;padding:10px">No quests assigned. Edit a quest to assign it to '+qm.name+'.</div>'}</div>`:''}
-    `;
-    list.appendChild(card);
-  });
-}
-function getCatOf(id){for(const c of['p','i','d','s'])if((quests[c]||[]).some(x=>x.id===id))return c;return null;}
 
 async function makeQuestSmart(id){
   const quest=findQ(id);if(!quest)return;
@@ -1776,13 +1677,16 @@ async function makeQuestSmart(id){
 async function addQuest(){
   const name=g('qn-name').value.trim();if(!name)return;
   const id='q'+Date.now();
+  const emoji=g('qn-emoji').value.trim();
   /* Use user selections as hints but let AI override */
   const hintCat=g('qn-cat').value,hintDiff=g('qn-diff').value;
   const newQ={id,name,sub:'',diff:hintDiff,done:false,milestones:[],tickedMs:[],expanded:true,generating:true,smart:false};
+  if(emoji)newQ.emoji=emoji;
   /* Temporarily assign to hint category */
   if(!quests[hintCat])quests[hintCat]=[];
   quests[hintCat].push(newQ);
   g('qn-name').value='';
+  g('qn-emoji').value='';
   saveQuests();qTab=hintCat;renderAll();
 
   /* Ask Claude to classify AND make SMART */
