@@ -1212,9 +1212,12 @@ function checkLevelUp(streak){
 function dismissLvUp(){g('lv-up').className='lv-up';}
 
 function syncCleanDay(tk){
-  const c=getC(tk);const clean=getPC(tk).length===0;const has=c.includes('h7');
-  if(clean&&!has)comp[tk]=[...new Set([...c,'h7'])];
-  else if(!clean&&has)comp[tk]=c.filter(x=>x!=='h7');
+  const c=getC(tk);
+  const req=core.filter(h=>h.id!=='h7'&&!isWeeklyHabit(h));
+  const allDone=req.every(h=>c.includes(h.id))&&getPC(tk).length===0;
+  const has=c.includes('h7');
+  if(allDone&&!has)comp[tk]=[...new Set([...c,'h7'])];
+  else if(!allDone&&has)comp[tk]=c.filter(x=>x!=='h7');
 }
 function healthDk(){
   if(!healthSteps||!healthSteps.ts)return null;
@@ -1271,11 +1274,7 @@ function renderToday(tk,streak,perfStreak){
     const qLink=aq?`<span class="quest-link" onclick="setView('quests')" title="${aq.name}"><i class="ti ti-target"></i></span>`:'';
     const accentCol=h.stat==='p'?'#1D9E75':h.stat==='i'?'#2563EB':'var(--acc)';
     const freqTag=isWeeklyHabit(h)?`<span class="freq-tag" title="${weeklyDoneCount(h)} of ${h.freq} this week">${weeklyDoneCount(h)}/${h.freq}</span>`:'';
-    if(h.id==='h7'){
-      const statusIcon=done?`<i class="ti ti-check" style="width:18px;flex-shrink:0;color:#1D9E75"></i>`:`<i class="ti ti-minus" style="width:18px;flex-shrink:0;color:var(--tx-s)"></i>`;
-      row.innerHTML=`${statusIcon}<span class="hname${done?' done':''}">${h.name}</span><span style="font-size:10px;color:var(--tx-s);font-style:italic" title="Auto-granted unless a penalty is logged today">auto</span>${STAT_TAGS[h.stat]||''}${qLink}<span class="xpb">+${h.xp}</span><button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','core')" title="Edit habit"><i class="ti ti-pencil"></i></button>`;
-      list.appendChild(row);return;
-    }
+    if(h.id==='h7')return;
     row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:${accentCol};flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}${freqTag}${qLink}<span class="xpb">+${h.xp}</span><button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','core')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('hd_'+h.id)}`;
     row.querySelector('input').addEventListener('change',e=>toggleH(h.id,e.target.checked,e));
     list.appendChild(row);attachHold('hd_'+h.id,()=>deleteHabit(h.id,'core'));
