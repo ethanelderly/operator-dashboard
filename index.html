@@ -171,6 +171,11 @@ button{cursor:pointer}
 .qc-chevron.open{transform:rotate(90deg)}
 .quest-body{display:none;padding:0 12px 12px;border-top:0.5px solid var(--bd-t)}
 .quest-body.open{display:block;animation:fadeIn .15s ease}
+.quest-card.qc-done{margin-bottom:5px}
+.quest-card.qc-done .quest-card-hd{padding:5px 12px}
+.quest-card.qc-done .qc-icon{width:22px;height:22px;font-size:11px}
+.quest-card.qc-done .qc-sub{display:none}
+.quest-card.qc-done .qc-name{font-size:12.5px}
 .sq-section{margin-top:10px}
 .sq-label{font-size:11px;font-weight:600;color:var(--tx-s);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
 .sq-item{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--bd-t)}
@@ -729,6 +734,15 @@ const SH={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/j
 async function sbGet(k){try{const r=await fetch(`${SB}/rest/v1/user_data?key=eq.${encodeURIComponent(k)}&select=value`,{headers:SH});if(!r.ok)return null;const d=await r.json();return d.length?JSON.parse(d[0].value):null;}catch{return null;}}
 async function sbSet(k,v){try{await fetch(`${SB}/rest/v1/user_data`,{method:'POST',headers:{...SH,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({key:k,value:JSON.stringify(v),updated_at:new Date().toISOString()})});}catch{}}
 async function sbDel(k){try{await fetch(`${SB}/rest/v1/user_data?key=eq.${encodeURIComponent(k)}`,{method:'DELETE',headers:SH});}catch{}}
+async function sbGetHealthSteps(){
+  try{
+    const r=await fetch(`${SB}/rest/v1/user_data?key=eq.healthsteps&select=value,updated_at`,{headers:SH});
+    if(!r.ok)return null;
+    const d=await r.json();
+    if(!d.length)return null;
+    return {steps:JSON.parse(d[0].value),ts:d[0].updated_at};
+  }catch{return null;}
+}
 
 /* ===== CONSTANTS ===== */
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -984,9 +998,10 @@ function questRepBreakdown(q){
 function calcQuestRep(q){return questRepBreakdown(q).total;}
 
 /* ===== STATE ===== */
-let core,opt,pen,comp,optComp,penComp,quests,rewards,repLog,manualRep,shownLvUp,totalRepBank,repByDay,userProfile,todos,todoComp;
+let core,opt,pen,comp,optComp,penComp,quests,rewards,repLog,manualRep,shownLvUp,totalRepBank,repByDay,userProfile,todos,todoComp,healthSteps;
 let optOpen=false,qTab='p',currentView='today';
 let syncTimeout=null;
+const STEP_GOAL=8000;
 
 function g(id){return document.getElementById(id);}
 function ss(sc){
@@ -1024,6 +1039,7 @@ async function loadData(){
   core=d.core||CORE_DEF;opt=d.opt||OPT_DEF;pen=d.pen||PEN_DEF;
   comp=d.comp||{};optComp=d.optc||{};penComp=d.penc||{};
   todos=d.todos||[];todoComp=d.todoc||{};
+  healthSteps=await sbGetHealthSteps()||{steps:0,ts:null};
   quests=d.quests||buildInitialQuests();
   /* Ensure side quests array exists */
   if(!quests.s)quests.s=[];
@@ -1195,9 +1211,30 @@ function checkLevelUp(streak){
 }
 function dismissLvUp(){g('lv-up').className='lv-up';}
 
+function syncCleanDay(tk){
+  const c=getC(tk);const clean=getPC(tk).length===0;const has=c.includes('h7');
+  if(clean&&!has)comp[tk]=[...new Set([...c,'h7'])];
+  else if(!clean&&has)comp[tk]=c.filter(x=>x!=='h7');
+}
+function healthDk(){
+  if(!healthSteps||!healthSteps.ts)return null;
+  const d=new Date(healthSteps.ts);
+  return isNaN(d)?null:d.toISOString().slice(0,10);
+}
+function syncHealthSteps(tk){
+  if(!healthSteps||!healthSteps.steps||healthSteps.steps<STEP_GOAL)return;
+  if(healthDk()!==tk)return;
+  const oc=getOC(tk);
+  if(!oc.includes('o1')){optComp[tk]=[...new Set([...oc,'o1'])];scheduleSave();}
+}
+async function pollHealthSteps(){
+  const hs=await sbGetHealthSteps();
+  if(hs)healthSteps=hs;
+  if(core)renderAll();
+}
 function renderAll(){
   if(!core)return;
-  const tk=dk(tod());const streak=calcStreak();const lvXP=lifetimeXP();
+  const tk=dk(tod());syncCleanDay(tk);syncHealthSteps(tk);const streak=calcStreak();const lvXP=lifetimeXP();
   checkLevelUp(lvXP);
   const pXP=Math.max(0,statXP(tk,'p')),iXP=Math.max(0,statXP(tk,'i')),dXP=Math.max(0,statXP(tk,'d'));
   const maxP=core.filter(h=>h.stat==='p').reduce((a,h)=>a+h.xp,0);
@@ -1234,6 +1271,11 @@ function renderToday(tk,streak,perfStreak){
     const qLink=aq?`<span class="quest-link" onclick="setView('quests')" title="${aq.name}"><i class="ti ti-target"></i></span>`:'';
     const accentCol=h.stat==='p'?'#1D9E75':h.stat==='i'?'#2563EB':'var(--acc)';
     const freqTag=isWeeklyHabit(h)?`<span class="freq-tag" title="${weeklyDoneCount(h)} of ${h.freq} this week">${weeklyDoneCount(h)}/${h.freq}</span>`:'';
+    if(h.id==='h7'){
+      const statusIcon=done?`<i class="ti ti-check" style="width:18px;flex-shrink:0;color:#1D9E75"></i>`:`<i class="ti ti-minus" style="width:18px;flex-shrink:0;color:var(--tx-s)"></i>`;
+      row.innerHTML=`${statusIcon}<span class="hname${done?' done':''}">${h.name}</span><span style="font-size:10px;color:var(--tx-s);font-style:italic" title="Auto-granted unless a penalty is logged today">auto</span>${STAT_TAGS[h.stat]||''}${qLink}<span class="xpb">+${h.xp}</span><button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','core')" title="Edit habit"><i class="ti ti-pencil"></i></button>`;
+      list.appendChild(row);return;
+    }
     row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:${accentCol};flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}${freqTag}${qLink}<span class="xpb">+${h.xp}</span><button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','core')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('hd_'+h.id)}`;
     row.querySelector('input').addEventListener('change',e=>toggleH(h.id,e.target.checked,e));
     list.appendChild(row);attachHold('hd_'+h.id,()=>deleteHabit(h.id,'core'));
@@ -1242,7 +1284,8 @@ function renderToday(tk,streak,perfStreak){
   opt.forEach(h=>{
     const done=oc.includes(h.id);const row=document.createElement('div');row.className='habit-row';
     const rNote=pct>=100?`<span style="font-size:11px;color:#BA7517">+${Math.floor(h.xp/OVERFLOW_RATE)} Rep</span>`:'';
-    row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:#EF9F27;flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}<span class="xpb">+${h.xp}</span>${rNote}<button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','opt')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('hd_opt_'+h.id)}`;
+    const stepsNote=(h.id==='o1'&&healthSteps&&healthDk()===tk)?`<span style="font-size:10px;color:${healthSteps.steps>=STEP_GOAL?'#1D9E75':'var(--tx-s)'}" title="Synced from Apple Health">${healthSteps.steps.toLocaleString()} steps · auto</span>`:'';
+    row.innerHTML=`<input type="checkbox" ${done?'checked':''} style="width:18px;height:18px;accent-color:#EF9F27;flex-shrink:0;cursor:pointer" aria-label="${h.name}"><span class="hname${done?' done':''}">${h.name}</span>${STAT_TAGS[h.stat]||''}${stepsNote}<span class="xpb">+${h.xp}</span>${rNote}<button class="qc-edit" onclick="event.stopPropagation();openHEdit('${h.id}','opt')" title="Edit habit"><i class="ti ti-pencil"></i></button>${delBtn('hd_opt_'+h.id)}`;
     row.querySelector('input').addEventListener('change',e=>toggleO(h.id,e.target.checked,e));
     optList.appendChild(row);attachHold('hd_opt_'+h.id,()=>deleteHabit(h.id,'opt'));
   });
@@ -1376,21 +1419,20 @@ function questCard(q){
   const next=q.done?getChainNext(q):null;
   const isChained=q.chainCat!==undefined&&QUEST_CHAINS[q.chainCat]?.[q.chainIdx]?.length>0;
   const card=document.createElement('div');
-  card.className='quest-card'+(q.expanded?' expanded':'');
+  card.className='quest-card'+(q.expanded?' expanded':'')+(q.done?' qc-done':'');
   card.id='qcard_'+q.id;
   const chainBadge=isChained?`<span class="badge" style="background:var(--acc-l);color:var(--acc-d)">${(q.stepIdx||0)+1}/${QUEST_CHAINS[q.chainCat][q.chainIdx]?.length||'?'}</span>`:'';
+  const badgesHTML=q.done
+    ?`<span class="badge bdone">✓ Done</span><span class="badge" style="background:#FAEEDA;color:#633806">${calcQuestRep(q)} Rep</span>${chainBadge}`
+    :`<span class="badge ${DIFF_CLS[diff]}">${DIFF_LBL[diff]}</span><span class="badge" style="background:#FAEEDA;color:#633806">${calcQuestRep(q)} Rep</span>${chainBadge}${(q.tags&&q.tags.length)?q.tags.slice(0,3).map(t=>`<span class="qc-tag">#${t}</span>`).join(''):''}`;
   card.innerHTML=`
     <div class="quest-card-hd" onclick="toggleQuestCard('${q.id}')">
-      <div class="qc-icon ${ICON_CLS[qTab]}">${q.emoji?`<span style="font-size:17px">${q.emoji}</span>`:`<i class="ti ${ICON_MAP[qTab]}"></i>`}</div>
+      <div class="qc-icon ${ICON_CLS[qTab]}">${q.emoji?`<span style="font-size:${q.done?13:17}px">${q.emoji}</span>`:`<i class="ti ${ICON_MAP[qTab]}"></i>`}</div>
       <div class="qc-body">
         <div class="qc-name${q.done?' done':''}">${q.name}</div>
         ${q.sub?`<div class="qc-sub">${q.sub}</div>`:''}
         <div class="qc-badges">
-          <span class="badge ${DIFF_CLS[diff]}">${DIFF_LBL[diff]}</span>
-          <span class="badge" style="background:#FAEEDA;color:#633806">${calcQuestRep(q)} Rep</span>
-          ${chainBadge}
-          ${q.done?'<span class="badge bdone">Done</span>':''}
-          ${(q.tags&&q.tags.length)?q.tags.slice(0,3).map(t=>`<span class="qc-tag">#${t}</span>`).join(''):''}
+          ${badgesHTML}
         </div>
       </div>
       <button class="qc-edit" onclick="event.stopPropagation();openQEdit('${q.id}')" title="Edit quest"><i class="ti ti-pencil"></i></button>
@@ -2005,6 +2047,7 @@ function showCel(msg,cls){const e=g('cel');e.className='cel show '+(cls||'cel-ha
 /* ===== INIT ===== */
 buildThemeBar();
 init();
+setInterval(pollHealthSteps,5*60*1000);
 </script>
 </body>
 </html>
