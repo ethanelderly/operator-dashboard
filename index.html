@@ -75,12 +75,12 @@ button{cursor:pointer}
 .cel-lv{background:var(--acc-l);border:0.5px solid var(--acc-m);color:var(--acc-d)}
 
 /* LEVEL UP */
-.lv-up{display:none;background:var(--acc-l);border:0.5px solid var(--acc);border-radius:var(--r-lg);padding:1.25rem;margin-bottom:12px;text-align:center;animation:fadeIn .3s ease}
+.lv-up{display:none;background:var(--acc-l);border:0.5px solid var(--acc);border-radius:var(--r-lg);padding:0.65rem 0.9rem;margin-bottom:12px;text-align:center;animation:fadeIn .3s ease}
 .lv-up.show{display:block}
-.lv-up-num{font-size:40px;font-weight:700;color:var(--acc);margin-bottom:4px}
-.lv-up-name{font-size:17px;font-weight:600;color:var(--acc-d);margin-bottom:10px}
-.lv-up-ul{list-style:none;margin-bottom:14px}
-.lv-up-ul li{font-size:13px;color:var(--acc-d);padding:3px 0;display:flex;align-items:center;justify-content:center;gap:6px}
+.lv-up-num{font-size:24px;font-weight:700;color:var(--acc);margin-bottom:2px}
+.lv-up-name{font-size:14px;font-weight:600;color:var(--acc-d);margin-bottom:6px}
+.lv-up-ul{list-style:none;margin-bottom:8px}
+.lv-up-ul li{font-size:11.5px;color:var(--acc-d);padding:1px 0;display:flex;align-items:center;justify-content:center;gap:6px}
 
 /* REWARD CELEBRATION OVERLAY */
 .reward-cel{display:none;position:fixed;inset:0;z-index:9999;pointer-events:none;align-items:center;justify-content:center;flex-direction:column}
@@ -1206,6 +1206,7 @@ function checkLevelUp(streak){
     g('lv-up-num').textContent=lv.lv;g('lv-up-name').textContent=lv.name;
     g('lv-up-ul').innerHTML=lv.unlocks.map(u=>`<li>🔓 ${u}</li>`).join('');
     g('lv-up').className='lv-up show';
+    setTimeout(dismissLvUp,7000);
     const b=g('lv-badge');if(b){b.classList.add('pulse');setTimeout(()=>b.classList.remove('pulse'),2000);}
   }
 }
