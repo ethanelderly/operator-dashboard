@@ -78,9 +78,7 @@ button{cursor:pointer}
 .lv-up{display:none;background:var(--acc-l);border:0.5px solid var(--acc);border-radius:var(--r-lg);padding:0.65rem 0.9rem;margin-bottom:12px;text-align:center;animation:fadeIn .3s ease}
 .lv-up.show{display:block}
 .lv-up-num{font-size:24px;font-weight:700;color:var(--acc);margin-bottom:2px}
-.lv-up-name{font-size:14px;font-weight:600;color:var(--acc-d);margin-bottom:6px}
-.lv-up-ul{list-style:none;margin-bottom:8px}
-.lv-up-ul li{font-size:11.5px;color:var(--acc-d);padding:1px 0;display:flex;align-items:center;justify-content:center;gap:6px}
+.lv-up-name{font-size:14px;font-weight:600;color:var(--acc-d)}
 
 /* REWARD CELEBRATION OVERLAY */
 .reward-cel{display:none;position:fixed;inset:0;z-index:9999;pointer-events:none;align-items:center;justify-content:center;flex-direction:column}
@@ -222,9 +220,6 @@ button{cursor:pointer}
 .lp-done{background:var(--acc-m);color:var(--acc-dp)}
 .lp-cur{background:var(--acc);color:#fff}
 .lp-lock{background:var(--bg-s);color:var(--tx-s)}
-.ul-list{list-style:none}
-.ul-list li{font-size:12px;color:var(--tx-s);display:flex;align-items:flex-start;gap:5px;padding:2px 0}
-.lv-block.unlocked .ul-list li,.lv-block.current .ul-list li{color:var(--tx-p)}
 .xp-track{height:8px;background:var(--bg-s);border-radius:99px;overflow:hidden;flex:1}
 .xp-fill{height:100%;border-radius:99px;background:var(--acc);transition:width .5s ease}
 .nu-card{background:var(--bg-s);border-radius:var(--r-md);padding:.7rem 1rem;display:flex;align-items:center;gap:10px;margin-bottom:10px}
@@ -522,8 +517,7 @@ button{cursor:pointer}
 <div id="cel" class="cel"><i class="ti ti-confetti" style="font-size:16px"></i><span id="cel-msg"></span></div>
 <div class="lv-up" id="lv-up">
   <div class="lv-up-num" id="lv-up-num">2</div>
-  <div class="lv-up-name" id="lv-up-name"></div>
-  <ul class="lv-up-ul" id="lv-up-ul"></ul>
+  <div class="lv-up-name" id="lv-up-name" style="margin-bottom:6px"></div>
   <button class="btn-sm" onclick="dismissLvUp()" style="margin:0 auto;display:block">Got it</button>
 </div>
 
@@ -750,14 +744,14 @@ const MONTHS=['January','February','March','April','May','June','July','August',
 const HOLD_MS=2000,CIRC=69,OVERFLOW_RATE=10,DEFAULT_PW='operator';
 
 const LEVELS=[
-  {lv:1,req:0,name:'Baseline',unlocks:['Core 7 habits active','XP tracking live','Day streak starts']},
-  {lv:2,req:250,name:'Locked in',unlocks:['Weekly scores visible','Quest board active','Rep store unlocked']},
-  {lv:3,req:600,name:'Operator',unlocks:['Overflow XP → Rep active','Optional habit Rep unlocked','Streak milestone bonuses']},
-  {lv:4,req:1200,name:'Builder',unlocks:['Chain quests for multi-step goals','To-Do XP counted toward your day','Perfect-day streak tracked']},
-  {lv:5,req:2200,name:'Accelerator',unlocks:['AI-generated SMART quests','Quest milestones & subquests','Profile customization unlocked']},
-  {lv:6,req:3600,name:'System',unlocks:['Reward Store stocked & claimable','Featured reward highlighted','Habit editor unlocked']},
-  {lv:7,req:5500,name:'Elite operator',unlocks:['Lifetime stat totals on profile','Full Rep breakdown (today/week/total)','Apple Health steps synced automatically']},
-  {lv:8,req:8000,name:'Sovereign',unlocks:['Day completed clean auto-granted','Full lifetime XP record','Every system active']},
+  {lv:1,req:0,name:'Baseline'},
+  {lv:2,req:250,name:'Locked in'},
+  {lv:3,req:600,name:'Operator'},
+  {lv:4,req:1200,name:'Builder'},
+  {lv:5,req:2200,name:'Accelerator'},
+  {lv:6,req:3600,name:'System'},
+  {lv:7,req:5500,name:'Elite operator'},
+  {lv:8,req:8000,name:'Sovereign'},
 ];
 
 const THEMES=[
@@ -1204,7 +1198,6 @@ function checkLevelUp(streak){
   if(lv.lv>shownLvUp){
     shownLvUp=lv.lv;sbSet('shownlv',shownLvUp);
     g('lv-up-num').textContent=lv.lv;g('lv-up-name').textContent=lv.name;
-    g('lv-up-ul').innerHTML=lv.unlocks.map(u=>`<li>🔓 ${u}</li>`).join('');
     g('lv-up').className='lv-up show';
     setTimeout(dismissLvUp,7000);
     const b=g('lv-badge');if(b){b.classList.add('pulse');setTimeout(()=>b.classList.remove('pulse'),2000);}
@@ -1851,9 +1844,7 @@ function renderLevels(lvXP){
     const ul=lvXP>=l.req,isCur=lv.lv===l.lv;
     const state=isCur?'current':ul?'unlocked':'locked';
     const pillCls='lv-pill '+(isCur?'lp-cur':ul?'lp-done':'lp-lock');
-    const expand=isCur||(next&&l.lv===next.lv);
-    const items=expand?`<ul class="ul-list">${l.unlocks.map(u=>`<li>${ul?'✓ ':'🔒 '}${u}</li>`).join('')}</ul>`:'';
-    tl.innerHTML+=`<div class="lv-row"><div class="lv-dot${isCur?' current':ul?' unlocked':''}"></div><div class="lv-block ${state}"><div class="lv-hd" style="${items?'':'margin-bottom:0'}"><span class="lv-title">Level ${l.lv} — ${l.name}</span><span class="${pillCls}">${l.req===0?'Start':l.req+' XP'}</span></div>${items}</div></div>`;
+    tl.innerHTML+=`<div class="lv-row"><div class="lv-dot${isCur?' current':ul?' unlocked':''}"></div><div class="lv-block ${state}"><div class="lv-hd" style="margin-bottom:0"><span class="lv-title">Level ${l.lv} — ${l.name}</span><span class="${pillCls}">${l.req===0?'Start':l.req+' XP'}</span></div></div></div>`;
   });
 }
 
