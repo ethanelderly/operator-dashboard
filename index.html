@@ -18,6 +18,7 @@
   --bg-p:#1e1e1c;--bg-s:#2a2a28;--bg-t:#111110;
   --tx-p:#f0ede8;--tx-s:#9e9b96;
   --bd-t:rgba(255,255,255,0.08);--bd-s:rgba(255,255,255,0.16);
+  --acc-l:#2d2a55;--acc-m:#4d4796;--acc-d:#cdc8f5;--acc-dp:#ece9fc;
 }}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{font-family:var(--font);color:var(--tx-p);background:var(--bg-t);min-height:100vh}
@@ -1118,8 +1119,18 @@ async function resetAll(){
 /* ===== THEME ===== */
 function applyTheme(t){
   const r=document.documentElement.style;
-  r.setProperty('--acc',t.hex);r.setProperty('--acc-l',t.light);
-  r.setProperty('--acc-m',t.mid);r.setProperty('--acc-d',t.dark);r.setProperty('--acc-dp',t.deep);
+  const isDark=matchMedia('(prefers-color-scheme:dark)').matches;
+  r.setProperty('--acc',t.hex);
+  if(isDark){
+    const[h,s,l]=hexToHsl(t.hex);
+    r.setProperty('--acc-l',hslToHex(h,Math.max(20,s*.5),Math.max(15,Math.min(30,l*.3))));
+    r.setProperty('--acc-m',hslToHex(h,Math.max(25,s*.6),Math.max(28,Math.min(45,l*.5))));
+    r.setProperty('--acc-d',hslToHex(h,Math.max(15,s*.4),Math.min(88,75+(100-l)*.1)));
+    r.setProperty('--acc-dp',hslToHex(h,Math.max(10,s*.25),92));
+  } else {
+    r.setProperty('--acc-l',t.light);r.setProperty('--acc-m',t.mid);
+    r.setProperty('--acc-d',t.dark);r.setProperty('--acc-dp',t.deep);
+  }
   sbSet('theme',t);
   document.querySelectorAll('.theme-swatch').forEach(s=>s.classList.toggle('active',s.dataset.hex===t.hex));
 }
